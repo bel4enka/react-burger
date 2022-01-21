@@ -1,0 +1,8 @@
+.abc {
+    background: red;
+    width: 100px;
+    height: 100px;
+}
+.test {
+    display: flex;
+}
