@@ -1,0 +1,10 @@
+.total {
+  display: flex;
+  gap: 40px;
+}
+
+.total__sum {
+ display: flex;
+  gap: 10px;
+  align-items: center;
+}
