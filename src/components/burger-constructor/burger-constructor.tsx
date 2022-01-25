@@ -3,7 +3,7 @@ import styles from './burger-constructor.module.css'
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import TotalSum from "../total-sum/total-sum";
 
-const BurgerConstructor = ({...props}) => {
+const BurgerConstructor = (props) => {
   return (
     <section className={`${styles.cart} mt-25`}>
       <div className={styles.cart__top}>

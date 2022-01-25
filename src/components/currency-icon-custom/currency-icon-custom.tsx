@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const CurrencyIconCustom= ({...props}) => {
+const CurrencyIconCustom= (props) => {
   console.log(props.size)
   return (
     <span>
