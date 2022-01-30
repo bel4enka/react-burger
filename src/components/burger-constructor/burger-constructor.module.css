@@ -30,3 +30,8 @@
 .cart__bottom {
   composes: cart__top;
 }
+
+.total {
+  display: flex;
+  gap: 40px;
+}
