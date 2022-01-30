@@ -12,7 +12,7 @@ function App() {
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState(null);
 
   useEffect(() => {
     fetch(apiUrl)
@@ -21,6 +21,7 @@ function App() {
         (result) => {
           setIsLoaded(true);
           setIngredients(result.data);
+          console.log(result.data)
         },
         (error) => {
           setIsLoaded(true);
@@ -30,9 +31,10 @@ function App() {
       )
   }, [])
   if (error) {
+    console.log('if error')
     return <div>Ошибка: {error}</div>;
-  }  else {
-
+  } else {
+    console.log('совсем else')
     return (
       <>
         <AppHeader/>

@@ -30,6 +30,7 @@ const BurgerIngredients = ({...props}) => {
     setIsOpen(item)
   }
 
+
   return (
         <section className={styles.ingredient}>
           <h1 className={'text text_type_main-large mb-5 mt-10'}>Соберите бургер</h1>
@@ -47,9 +48,9 @@ const BurgerIngredients = ({...props}) => {
 
           <div className={`${styles.wrap_product} custom-scroll mt-10`}>
 
-            {!props.loader &&
-              <p>Загрузка...</p>
-            }
+            {/*{!props.loader &&*/}
+            {/*  <p>Загрузка...</p>*/}
+            {/*}*/}
 
             <section ref={bun} id={"bun"}>
               <h2 className={'text text_type_main-medium'}>Булки</h2>
