@@ -23,7 +23,7 @@ function Modal(props) {
 
   return createPortal(
     <>
-      <ModalOverlay onClose={props.onClose}>
+      <ModalOverlay onClose={props.onClose} />
       <div className={`${styles.modal} pt-10 pl-10 pr-10 pb-15`}>
         <div >
           <div className={`${styles.modal__header} text text_type_main-large mb-4`}>
@@ -37,7 +37,7 @@ function Modal(props) {
           </div>
         </div>
       </div>
-      </ModalOverlay>
+
     </>,
       node
     );

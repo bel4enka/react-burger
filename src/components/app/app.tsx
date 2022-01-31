@@ -15,7 +15,12 @@ function App() {
 
   useEffect(() => {
     fetch(apiUrl)
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res.status);
+      })
       .then(
         (result) => {
           setIsLoaded(true);
@@ -28,6 +33,7 @@ function App() {
         }
       ).catch((error) => console.log( error ))
   }, [])
+
   if (error) {
     return <div>Ошибка: {error}</div>;
   } else {

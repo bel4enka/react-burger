@@ -11,11 +11,7 @@ function ModalOverlay(props) {
   }
 
   return(
-    <>
-      <div ref={overlayRef} onClick={closeModal} className={styles.overlay}>
-        {props.children}
-      </div>
-    </>
+      <div ref={overlayRef} onClick={closeModal} className={styles.overlay}/>
   )
 }
 
