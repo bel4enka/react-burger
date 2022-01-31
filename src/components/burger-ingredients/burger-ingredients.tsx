@@ -5,7 +5,6 @@ import BurgerIngredientItem
   from "../burger-ingredient-item/burger-ingredient-item";
 import PropTypes from 'prop-types';
 import burgerIngredients from '../../utils/type'
-import ModalOverlay from "../modal-overlay/modal-overlay";
 import Modal from "../modal/modal";
 import IngredientDetails from '../ingredient-details/ingredient-details'
 
@@ -30,7 +29,6 @@ const BurgerIngredients = ({...props}) => {
     setIsOpen(item)
   }
 
-
   return (
         <section className={styles.ingredient}>
           <h1 className={'text text_type_main-large mb-5 mt-10'}>Соберите бургер</h1>
@@ -48,11 +46,8 @@ const BurgerIngredients = ({...props}) => {
 
           <div className={`${styles.wrap_product} custom-scroll mt-10`}>
 
-            {/*{!props.loader &&*/}
-            {/*  <p>Загрузка...</p>*/}
-            {/*}*/}
-
-            <section ref={bun} id={"bun"}>
+            {props.ingredients &&
+            <><section ref={bun} id={"bun"}>
               <h2 className={'text text_type_main-medium'}>Булки</h2>
               <ul className={styles.product__items_list}>
                 {props.ingredients.map((item) => item.type === 'bun' && <li key={item._id}  onClick={()=>{toggleModal(item)}} >
@@ -77,12 +72,12 @@ const BurgerIngredients = ({...props}) => {
                   <BurgerIngredientItem item={item}  />
                 </li>)}
               </ul>
-            </section>
+            </section></> }
           </div>
           {isOpen &&
 
-              <Modal onClose={toggleModal}>
-                <IngredientDetails item={isOpen} />
+              <Modal onClose={toggleModal} title={'Детали ингредиента'}>
+                <IngredientDetails item={isOpen}  />
               </Modal>
           }
         </section>

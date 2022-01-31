@@ -5,9 +5,9 @@ import iconOk from '../../images/iconOk.png'
 function OrderDetails(props) {
   return(
     <>
-      <div className={`${styles.number} text text_type_digits-large`}>034536</div>
-      <p className={`${styles.id} text text_type_main-medium mt-8`}>идентификатор заказа</p>
-      <div className={`${styles.icon} mt-15 mb-15`}>
+      <div className={`text text_type_digits-large`}>034536</div>
+      <p className={`text text_type_main-medium mt-8`}>идентификатор заказа</p>
+      <div className={`mt-15 mb-15`}>
         <img src={iconOk} alt="готовим заказ"/>
       </div>
       <p className={`text text_type_main-default`}>Ваш заказ начали готовить</p>

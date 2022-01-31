@@ -26,13 +26,13 @@ function Modal(props) {
       <ModalOverlay onClose={props.onClose}>
       <div className={`${styles.modal} pt-10 pl-10 pr-10 pb-15`}>
         <div >
-          <div className={styles.modal__header}>
-            {/*<h2 className={styles.modal__title}>{title}</h2>*/}
+          <div className={`${styles.modal__header} text text_type_main-large mb-4`}>
+              <span>{props.title}</span>
             <span onClick={() => {props.onClose(false)}} className={styles.modal__close}>
               <CloseIcon type='primary'/>
             </span>
           </div>
-          <div>
+          <div className={styles.modal__content}>
             {props.children}
           </div>
         </div>

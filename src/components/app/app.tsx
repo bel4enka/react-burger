@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
-import  {data, cart} from '../../utils/data'
 import BurgerConstructor from '../burger-constructor/burger-constructor'
 import  BurgerIngredients  from '../burger-ingredients/burger-ingredients';
 
@@ -21,26 +20,23 @@ function App() {
         (result) => {
           setIsLoaded(true);
           setIngredients(result.data);
-          console.log(result.data)
         },
         (error) => {
           setIsLoaded(true);
           setError(error);
           console.log(error)
         }
-      )
+      ).catch((error) => console.log( error ))
   }, [])
   if (error) {
-    console.log('if error')
     return <div>Ошибка: {error}</div>;
   } else {
-    console.log('совсем else')
     return (
       <>
         <AppHeader/>
         <main className={`${styles.main}`}>
-          <BurgerIngredients ingredients={ingredients} loader={isLoaded}/>
-          <BurgerConstructor constr={ingredients} loader={isLoaded}/>
+          <BurgerIngredients ingredients={ingredients} />
+          <BurgerConstructor constr={ingredients}/>
         </main>
       </>
     );
