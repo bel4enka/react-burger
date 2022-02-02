@@ -3,6 +3,9 @@ import styles from './modal.module.css'
 import ReactDOM, {createPortal} from "react-dom";
 import {CloseIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../modal-overlay/modal-overlay";
+import PropTypes from "prop-types";
+import burgerIngredients from "../../utils/type";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 
 function Modal(props) {
 
@@ -10,7 +13,7 @@ function Modal(props) {
 
   useEffect(() => {
     const handleEsc = (event) => {
-      if (event.keyCode === 27) {
+      if (event.key === 'Escape') {
         props.onClose()
       }
     };
@@ -37,9 +40,15 @@ function Modal(props) {
           </div>
         </div>
       </div>
-
     </>,
       node
     );
 }
+
+Modal.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  onClose: PropTypes.func.isRequired
+}
+
 export default Modal

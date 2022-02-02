@@ -23,7 +23,7 @@ const BurgerIngredients = ({...props}) => {
         behavior: 'smooth',
       })
   }
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(null)
 
   function toggleModal(item) {
     setIsOpen(item)

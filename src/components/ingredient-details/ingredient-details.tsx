@@ -1,5 +1,8 @@
 import React from "react";
 import styles from './ingredient-details.module.css'
+import PropTypes from "prop-types";
+import burgerIngredients from "../../utils/type";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 
 function IngredientDetails(props) {
   return(
@@ -26,4 +29,15 @@ function IngredientDetails(props) {
   )
 }
 
+IngredientDetails.propTypes = {
+  data: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    calories: PropTypes.number.isRequired,
+    proteins: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    carbohydrates: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired
+  }),
+  item: PropTypes.object.isRequired
+}
 export default IngredientDetails
