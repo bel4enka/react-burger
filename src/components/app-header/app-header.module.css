@@ -1,0 +1,51 @@
+.nav {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  gap: 49px;
+}
+
+.header {
+  background: #1C1C21;
+}
+
+.header__wrap {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  max-width: 1240px;
+}
+.header__nav {
+
+}
+
+.nav__link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
+
+.nav__item {
+
+}
+
+.nav__title {
+
+}
+.logo {
+
+}
+
+.profile {
+
+}
+.profile__link {
+ composes: nav__link;
+}
+.profile__title {
+
+}

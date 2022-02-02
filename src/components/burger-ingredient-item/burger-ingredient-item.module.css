@@ -1,0 +1,20 @@
+.product__price {
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+}
+
+.product__title {
+  text-align: center;
+}
+
+.product__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 272px;
+  gap: 8px;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}

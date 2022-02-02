@@ -1,0 +1,20 @@
+.ingredient {
+  max-width: 600px;
+}
+
+.wrap_product {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.tab {
+  display: flex;
+}
+.product__items_list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
