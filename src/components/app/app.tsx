@@ -42,7 +42,6 @@ function App() {
   const {Provider} = Context;
   const [error, setError] = useState(null);
   // const [isLoaded, setIsLoaded] = useState(false);
-  const [ingredients, setIngredients] = useState([]);
   const [constr, setConstr] = useState([]);
   const contextState = useReducer(reducer, initials)
   const [state, dispatch] = contextState;
@@ -63,8 +62,6 @@ function App() {
       .then(
         (result) => {
           // setIsLoaded(true);
-          setIngredients(result.data);
-          setConstr(result.data)
           dispatch({type:"constr", payload: result.data});
           dispatch({type:"ingredients", payload: result.data});
           // над строчкой ниже подумать
@@ -83,7 +80,7 @@ function App() {
     return (
       <>
         <AppHeader/>
-        {ingredients.length > 0 &&
+        {state.ingredients.length > 0 &&
           <main className={`${styles.main}`}>
             <Provider value={{state, dispatch}}>
               <BurgerIngredients/>
