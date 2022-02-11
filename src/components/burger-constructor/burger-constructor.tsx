@@ -49,6 +49,7 @@ const BurgerConstructor = (props) => {
       .then(res => {
         toggleModal(!modalState.open, res.order.number, res.name);
         dispatch({type:"constr", payload: []})
+        dispatch({type:"total", payload: 0})
       })
       .catch(err => {
         console.log(err);

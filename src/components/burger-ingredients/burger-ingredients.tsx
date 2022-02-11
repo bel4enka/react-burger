@@ -78,7 +78,7 @@ const BurgerIngredients = () => {
           {isOpen &&
 
               <Modal onClose={toggleModal} title={'Детали ингредиента'}>
-                <IngredientDetails item={isOpen}  />
+                <IngredientDetails item={isOpen} />
               </Modal>
           }
         </section>

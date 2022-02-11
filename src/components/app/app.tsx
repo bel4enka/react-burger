@@ -50,7 +50,6 @@ function App() {
   // const contextValue = useMemo(() => {
   //   return { state, dispatch };
   // }, [state, dispatch]);
-
   useEffect(() => {
     fetch(apiUrl)
       .then(res => {
