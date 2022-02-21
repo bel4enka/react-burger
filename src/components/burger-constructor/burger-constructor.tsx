@@ -119,7 +119,4 @@ const BurgerConstructor = (props) => {
       </section>
     )
 }
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(burgerIngredients)
-}
 export default BurgerConstructor;
