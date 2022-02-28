@@ -1,5 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
 import styles from './burger-constructor.module.css'
+import {  setConstructor, setBun} from "../../services/slice/constructor-slice";
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {
   Button,
   ConstructorElement,
@@ -9,14 +11,21 @@ import TotalSum from "../total-sum/total-sum";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import PropTypes from "prop-types";
-import burgerIngredients from "../../utils/type";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import {Context} from "../../services/context";
+import { useDrop } from 'react-dnd';
+import {selectAll} from "../../services/slice/constructor-slice";
+import store from "../../services";
+import { nanoid } from 'nanoid'
+import BurgerIngredientItem
+  from "../burger-ingredient-item/burger-ingredient-item";
+import BurgerConstructorItem
+  from "../burger-constructor-item/burger-constructor-item";
+
+
 
 const BurgerConstructor = (props) => {
-
-  const {state, dispatch} = useContext(Context)
-  const constr = state.constr
+  const dispatch = useDispatch();
+  const {bun} = useSelector((state:RootStateOrAny) => state.constructors);
+  const constructor:any = selectAll(store.getState());
   const [modalState, setModalState] = useState({
     'open': false,
     'number': null,
@@ -30,65 +39,72 @@ const BurgerConstructor = (props) => {
       'name': name
     })
   }
-
   const sendOrder = () => {
-    fetch('https://norma.nomoreparties.space/api/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ingredients: constr.map(e => e._id),
-      })
-    }).then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-      .then(res => {
-        toggleModal(!modalState.open, res.order.number, res.name);
-        dispatch({type:"constr", payload: []})
-        dispatch({type:"total", payload: 0})
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    // fetch('https://norma.nomoreparties.space/api/orders', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     ingredients: constr.map(e => e._id),
+    //   })
+    // }).then(res => {
+    //   if (res.ok) {
+    //     return res.json();
+    //   }
+    //   return Promise.reject(`Ошибка: ${res.status}`);
+    // })
+    //   .then(res => {
+    //     toggleModal(!modalState.open, res.order.number, res.name);
+    //     dispatch({type:"constructor", payload: []})
+    //     dispatch({type:"constructor", payload: 0})
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   })
+  }
+  const [{isHover}, drop] = useDrop({
+    accept: 'ingredients',
+    drop: (item) => {
+      onDrop(item);
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    }),
+  });
+  const border = isHover ? '1px lightgreen solid' : 'none';
+  const onDrop = (item) => {
+    // @ts-ignore
+    item.type === 'bun' ? dispatch(setBun(item)) : dispatch(setConstructor(item))
   }
 
-    return (
-
-      <section className={`${styles.cart} mt-25`}>
+  // @ts-ignore
+  return (
+      <section className={`${styles.cart} mt-25`} ref={drop} style={{border}}>
         {modalState.open &&
 
           <Modal onClose={toggleModal}>
-            <OrderDetails number={modalState.number} name={modalState.name}/>
+            <OrderDetails number={modalState.number} name={modalState.name} constructor={constructor}/>
           </Modal>
         }
 
           <div className={styles.cart__top}>
-            {constr[0] &&
+            {bun.length?
               <ConstructorElement
                 type="top"
                 isLocked={true}
-                text={constr[0].name + ' (верх)'}
-                price={constr[0].price}
-                thumbnail={constr[0].image}
-              />
+                text={bun[0].name + ' (верх)'}
+                price={bun[0].price}
+                thumbnail={bun[0].image}
+              />: null
             }
           </div>
-            {constr.length > 0 ?
+            {constructor.length || bun.length ?
               <ul className={`${styles.carts__items} custom-scroll mt-4 mb-4`}>
 
-                {constr.map((item, i) => item.type !== 'bun' && (
-                    <li className={`${styles.cart__item}`} key={item._id + i}>
-                      <DragIcon type="primary"/>
-                      <ConstructorElement
-                        text={item.name}
-                        price={item.price}
-                        thumbnail={item.image}
-                      />
-                    </li>
+                {constructor.map((item, index) => item.type !== 'bun' && (
+                  // @ts-ignore
+                      <BurgerConstructorItem key={nanoid()} item={item} isLocked={false} id={item._id} index={index} constructor={constructor}/>
                   )
                 )}
               </ul>:
@@ -96,19 +112,19 @@ const BurgerConstructor = (props) => {
             }
           <div className={styles.cart__bottom}>
 
-            {constr[0] &&
+            {bun.length?
               <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text={constr[0].name + ' (низ)'}
-                price={constr[0].price}
-                thumbnail={constr[0].image}
-              />
+                text={bun[0].name + ' (низ)'}
+                price={bun[0].price}
+                thumbnail={bun[0].image}
+              />: null
             }
           </div>
-            {constr.length > 0 &&
+            {constructor.length &&
               <div className={`${styles.total} mt-10`}>
-              <TotalSum/>
+              {/*<TotalSum/>*/}
               <Button type="primary" size="medium" onClick={() => {
                 sendOrder()
               }}>

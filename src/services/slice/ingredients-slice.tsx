@@ -52,8 +52,12 @@ export const ingredientsSlice = createSlice({
 const {actions, reducer} = ingredientsSlice;
 
 export default reducer;
+
 // @ts-ignore
-export const selectors = ingredientsAdapter.getSelectors((state) => state);
+// export const selectors = ingredientsAdapter.getSelectors(state => state.ingredients);
+// @ts-ignore
+export const {selectAll} = ingredientsAdapter.getSelectors(state => state.ingredients);
+
 export const {
   ingredientsTest,
   ingredientsSetTab

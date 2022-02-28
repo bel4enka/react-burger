@@ -4,13 +4,15 @@ import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem
   from "../burger-ingredient-item/burger-ingredient-item";
 import PropTypes from 'prop-types';
-import burgerIngredients from '../../utils/type'
 import Modal from "../modal/modal";
 import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
-import  { fetchIngredients, ingredientsSetTab, selectors } from "../../services/slice/ingredients-slice";
+import  { fetchIngredients, ingredientsSetTab, selectAll} from "../../services/slice/ingredients-slice";
+import store from "../../services";
 
 const BurgerIngredients = () => {
+  const {tab} = useSelector((state:RootStateOrAny) => state.ingredients);
+  const ingredients = selectAll(store.getState());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,20 +36,17 @@ const BurgerIngredients = () => {
     setIsOpen(item)
   }
 
-  const ingredients = useSelector(selectors.selectAll);
-  const current = useSelector( (state:RootStateOrAny) => state.tab);
-
   return (
         <section className={styles.ingredient}>
           <h1 className={'text text_type_main-large mb-5 mt-10'}>Соберите бургер</h1>
           <div className={styles.tab}>
-            <Tab value="bun" active={current === 'bun'} onClick={(e) => click(e, bun)}>
+            <Tab value="bun" active={tab === 'bun'} onClick={(e) => click(e, bun)}>
               Булки
             </Tab>
-            <Tab value="main" active={current === 'main'} onClick={(e) => click(e, main)}>
+            <Tab value="main" active={tab === 'main'} onClick={(e) => click(e, main)}>
               Соусы
             </Tab>
-            <Tab value="sauce" active={current === 'sauce'} onClick={(e) => click(e, sauce)}>
+            <Tab value="sauce" active={tab === 'sauce'} onClick={(e) => click(e, sauce)}>
               Начинки
             </Tab>
           </div>
