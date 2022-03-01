@@ -1,6 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import styles from './burger-constructor.module.css'
-import {  setConstructor, setBun} from "../../services/slice/constructor-slice";
+import {
+  setConstructor,
+  setBun,
+  fetchOrder
+} from "../../services/slice/constructor-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {
   Button,
@@ -12,20 +16,20 @@ import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import PropTypes from "prop-types";
 import { useDrop } from 'react-dnd';
-import {selectAll} from "../../services/slice/constructor-slice";
-import store from "../../services";
 import { nanoid } from 'nanoid'
 import BurgerIngredientItem
   from "../burger-ingredient-item/burger-ingredient-item";
 import BurgerConstructorItem
   from "../burger-constructor-item/burger-constructor-item";
+import {fetchIngredients} from "../../services/slice/ingredients-slice";
 
 
 
 const BurgerConstructor = (props) => {
   const dispatch = useDispatch();
-  const {bun} = useSelector((state:RootStateOrAny) => state.constructors);
-  const constructor:any = selectAll(store.getState());
+  const bun = useSelector((state:RootStateOrAny) => state.constructors.bun);
+  const constructor = useSelector((state:RootStateOrAny) => state.constructors.constructor);
+
   const [modalState, setModalState] = useState({
     'open': false,
     'number': null,
@@ -40,29 +44,11 @@ const BurgerConstructor = (props) => {
     })
   }
   const sendOrder = () => {
-    // fetch('https://norma.nomoreparties.space/api/orders', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     ingredients: constr.map(e => e._id),
-    //   })
-    // }).then(res => {
-    //   if (res.ok) {
-    //     return res.json();
-    //   }
-    //   return Promise.reject(`Ошибка: ${res.status}`);
-    // })
-    //   .then(res => {
-    //     toggleModal(!modalState.open, res.order.number, res.name);
-    //     dispatch({type:"constructor", payload: []})
-    //     dispatch({type:"constructor", payload: 0})
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   })
+    const ingredients = bun.concat(constructor).map(e => e._id)
+    // @ts-ignore
+    dispatch(fetchOrder(ingredients))
   }
+
   const [{isHover}, drop] = useDrop({
     accept: 'ingredients',
     drop: (item) => {

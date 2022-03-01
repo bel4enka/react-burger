@@ -25,22 +25,13 @@ export const ingredientsSlice = createSlice({
     ingredientsSetTab: (state, action) => {
       state.tab = action.payload;
     },
-    ingredientsTest: (state, action) => {
-      // state.ingredients.push(1, 2, 445);
-      // ingredientsAdapter.addOne(state, '3536, 32r23');
-    },
-    // heroDeleted: (state, action) => {
-    //   state.ingredients = state.ingredients.filter(item => item.id !== action.payload);
-    // }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, state => {state.ingredientsLoadingStatus = 'loading'})
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.ingredientsLoadingStatus = 'idle';
-        // state.ingredients = action.payload.data;
         ingredientsAdapter.setAll(state, action.payload.data);
-
       })
       .addCase(fetchIngredients.rejected, state => {
         state.ingredientsLoadingStatus = 'error';
@@ -59,6 +50,5 @@ export default reducer;
 export const {selectAll} = ingredientsAdapter.getSelectors(state => state.ingredients);
 
 export const {
-  ingredientsTest,
   ingredientsSetTab
 } = actions;

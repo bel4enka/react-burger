@@ -3,8 +3,8 @@ import {useDispatch} from "react-redux";
 import React, {useRef} from "react";
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, useDrop } from 'react-dnd';
-import {
-  moveIngredient,
+import {moveIngredient
+
 } from "../../services/slice/constructor-slice";
 
 
@@ -65,11 +65,7 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
         return;
       }
       // @ts-ignore
-      const ingredientsNew = [...constructor]
-      // @ts-ignore
-      ingredientsNew.splice(dragIndex, 0, ingredientsNew.splice(hoverIndex, 1)[0])
-      console.log(ingredientsNew)
-      dispatch(moveIngredient(ingredientsNew))
+      dispatch(moveIngredient({drag: dragIndex, hover: hoverIndex }))
       //@ts-ignore
       item.index = hoverIndex;
     },
@@ -92,6 +88,7 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
         text={item.name}
         price={item.price}
         thumbnail={item.image}
+        // handleClose={()=>{dispatch(deleteIngredient(item.id))}}
       />
     </li>
   )
