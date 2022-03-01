@@ -44,9 +44,11 @@ export const constructorSlice = createSlice({
       state.constructor.push(action.payload)
     },
     moveIngredient: (state, action)=> {
-      const ingredientsNew = [...state.constructor]
+      const ingredientsNew = state.constructor
       // @ts-ignore
-      ingredientsNew.splice(action.payload.drag, 0, ingredientsNew.splice(action.payload.hover, 1)[0])
+      console.log(action.payload.hover)
+      ingredientsNew[action.payload.drag] = ingredientsNew.splice(action.payload.hover, 1, ingredientsNew[action.payload.drag])[0];
+      // ingredientsNew.splice(action.payload.drag, 0, ingredientsNew.splice(action.payload.hover, 1)[0])
       state.constructor = ingredientsNew
       },
       deleteIngredient: (state, action) => {

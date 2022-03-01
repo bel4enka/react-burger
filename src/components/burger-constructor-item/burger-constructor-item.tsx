@@ -29,11 +29,11 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
       }
     },
     drop(item) {
-      //onDropHandler(item);
-      //@ts-ignore
-      // const ihover = index;
-      // if(idrag==ihover) return;
-      // // dispatch({type:CHANGE_SORT, drag:idrag, hover:ihover});
+      // @ts-ignore
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if(dragIndex==hoverIndex) return;
+      dispatch(moveIngredient({drag: dragIndex, hover: hoverIndex }))
     },
     hover(item, monitor) {
       if (!ref.current) {
@@ -43,7 +43,6 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
       // @ts-ignore
       const dragIndex = item.index;
       // @ts-ignore
-      const dragId = item.id;
       const hoverIndex = index;
       // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
@@ -77,7 +76,7 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
 
   return (
     // @ts-ignore
-    <li className={styles.cart__item} key={item._id} ref={ref} draggable style={{ opacity }} data-handler-id={handlerId}>
+    <li className={styles.cart__item} ref={ref} draggable style={{ opacity }} data-handler-id={handlerId}>
       {/*// @ts-ignore*/}
       <span className={styles.drag_icon}>
         <DragIcon type="primary"/>

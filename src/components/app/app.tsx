@@ -20,10 +20,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 
 function App() {
-
-// TS infers `isOn` is boolean
-
-
   return (
       <>
         <AppHeader/>
@@ -33,9 +29,7 @@ function App() {
               <BurgerConstructor/>
             </DndProvider>
           </main>
-
       </>
     );
-
 }
 export default App
