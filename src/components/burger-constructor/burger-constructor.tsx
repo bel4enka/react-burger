@@ -90,7 +90,7 @@ const BurgerConstructor = (props) => {
 
                 {constructor.map((item, index) => item.type !== 'bun' && (
                   // @ts-ignore
-                      <BurgerConstructorItem key={nanoid()} item={item} isLocked={false} id={item._id} index={index} constructor={constructor}/>
+                      <BurgerConstructorItem key={item.id} item={item} isLocked={false} id={item._id} index={index} constructor={constructor}/>
                   )
                 )}
               </ul>:

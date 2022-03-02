@@ -76,7 +76,7 @@ const BurgerConstructorItem = ({ item, type, isLocked, id, index, constructor}) 
 
   return (
     // @ts-ignore
-    <li className={styles.cart__item} ref={ref} draggable style={{ opacity }} data-handler-id={handlerId}>
+    <li className={styles.cart__item}  ref={ref} draggable style={{ opacity }} data-handler-id={handlerId}>
       {/*// @ts-ignore*/}
       <span className={styles.drag_icon}>
         <DragIcon type="primary"/>

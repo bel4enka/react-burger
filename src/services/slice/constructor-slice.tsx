@@ -27,22 +27,20 @@ export const constructorSlice = createSlice({
   name: 'constructors',
   initialState,
   reducers: {
-    // setConstructor: {
-    //   reducer: (state, action) => {
-    //     state.constructor.push(action.payload) ;
-    //   },// @ts-ignore
-    //   prepare: (item) => {
-    //     const id:string = nanoid()
-    //    // @ts-ignore
-    //     return { payload: {id, ...item} }
-    //   },
-    // },
+    setConstructor: {
+      reducer: (state, action) => {
+        state.constructor.push(action.payload) ;
+      },// @ts-ignore
+      prepare: (item) => {
+        const id:string = nanoid()
+       // @ts-ignore
+        return { payload: {id, ...item} }
+      },
+    },
     setBun: (state, action) => {
       state.bun.splice(0, 1, action.payload)
     },
-    setConstructor: (state, action) => {
-      state.constructor.push(action.payload)
-    },
+
     moveIngredient: (state, action)=> {
       const ingredientsNew = state.constructor
       // @ts-ignore
