@@ -9,7 +9,7 @@ const ingredientsAdapter = createEntityAdapter({
 
 const initialState = ingredientsAdapter.getInitialState({
   ingredientsLoadingStatus: 'idle',
-  tab: "bun",
+  ingredient: null,
 });
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
@@ -22,8 +22,8 @@ export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {
-    ingredientsSetTab: (state, action) => {
-      state.tab = action.payload;
+    ingredientModal: (state, action) => {
+      state.ingredient = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -45,10 +45,8 @@ const {actions, reducer} = ingredientsSlice;
 export default reducer;
 
 // @ts-ignore
-// export const selectors = ingredientsAdapter.getSelectors(state => state.ingredients);
-// @ts-ignore
 export const {selectAll} = ingredientsAdapter.getSelectors(state => state.ingredients);
 
 export const {
-  ingredientsSetTab
+  ingredientModal
 } = actions;

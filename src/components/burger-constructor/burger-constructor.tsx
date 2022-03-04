@@ -1,52 +1,34 @@
-import React, {useState, useContext, useEffect} from "react";
+import React from "react";
 import styles from './burger-constructor.module.css'
 import {
   setConstructor,
   setBun,
-  fetchOrder
+  fetchOrder, removeOrderModal
 } from "../../services/slice/constructor-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
-import {
-  Button,
-  ConstructorElement,
-  DragIcon
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, ConstructorElement, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import TotalSum from "../total-sum/total-sum";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import PropTypes from "prop-types";
 import { useDrop } from 'react-dnd';
-import { nanoid } from 'nanoid'
-import BurgerIngredientItem
-  from "../burger-ingredient-item/burger-ingredient-item";
 import BurgerConstructorItem
   from "../burger-constructor-item/burger-constructor-item";
-import {fetchIngredients} from "../../services/slice/ingredients-slice";
 
 
 
-const BurgerConstructor = (props) => {
+const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const bun = useSelector((state:RootStateOrAny) => state.constructors.bun);
-  const constructor = useSelector((state:RootStateOrAny) => state.constructors.constructor);
+  const {bun, constructor, order} = useSelector((state:RootStateOrAny) => state.constructors);
 
-  const [modalState, setModalState] = useState({
-    'open': false,
-    'number': null,
-    'name': null
-  })
-
-  const toggleModal = (open, num, name) =>{
-    setModalState({
-      'open': !modalState.open,
-      'number': num,
-      'name': name
-    })
+  const toggleModal = () =>{
+    dispatch(removeOrderModal(null))
   }
   const sendOrder = () => {
     const ingredients = bun.concat(constructor).map(e => e._id)
     // @ts-ignore
     dispatch(fetchOrder(ingredients))
+
   }
 
   const [{isHover}, drop] = useDrop({
@@ -63,14 +45,14 @@ const BurgerConstructor = (props) => {
     // @ts-ignore
     item.type === 'bun' ? dispatch(setBun(item)) : dispatch(setConstructor(item))
   }
-
+  const bunFirstElement = bun[0];
   // @ts-ignore
   return (
       <section className={`${styles.cart} mt-25`} ref={drop} style={{border}}>
-        {modalState.open &&
+        {order &&
 
           <Modal onClose={toggleModal}>
-            <OrderDetails number={modalState.number} name={modalState.name} constructor={constructor}/>
+            <OrderDetails/>
           </Modal>
         }
 
@@ -79,9 +61,9 @@ const BurgerConstructor = (props) => {
               <ConstructorElement
                 type="top"
                 isLocked={true}
-                text={bun[0].name + ' (верх)'}
-                price={bun[0].price}
-                thumbnail={bun[0].image}
+                text={bunFirstElement.name + ' (верх)'}
+                price={bunFirstElement.price}
+                thumbnail={bunFirstElement.image}
               />: null
             }
           </div>
@@ -102,22 +84,24 @@ const BurgerConstructor = (props) => {
               <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text={bun[0].name + ' (низ)'}
-                price={bun[0].price}
-                thumbnail={bun[0].image}
+                text={bunFirstElement.name + ' (низ)'}
+                price={bunFirstElement.price}
+                thumbnail={bunFirstElement.image}
               />: null
             }
           </div>
-            {constructor.length &&
+
               <div className={`${styles.total} mt-10`}>
-              {/*<TotalSum/>*/}
-              <Button type="primary" size="medium" onClick={() => {
-                sendOrder()
-              }}>
+              <TotalSum/>
+              <Button
+                type="primary" size="medium"
+                onClick={() => {sendOrder()}}
+                disabled={(bun.length === 0 || !constructor)}
+              >
               <span className="text text_type_main-default disabled">Оформить заказ</span>
               </Button>
               </div>
-            }
+
       </section>
     )
 }

@@ -1,27 +1,28 @@
 import React from "react";
 import styles from './ingredient-details.module.css'
-import PropTypes from "prop-types";
-import burgerIngredients from "../../utils/type";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 
-function IngredientDetails(props) {
+import {RootStateOrAny, useSelector} from "react-redux";
+
+function IngredientDetails() {
+  const {ingredient} = useSelector((state:RootStateOrAny) => state.ingredients);
+
   return(
     <>
-      <img className={styles.img} src={props.item.image} alt={props.item.name}/>
-      <p className={'text text_type_main-medium mt-4 mb-8'}>{props.item.name}</p>
+      <img className={styles.img} src={ingredient.image} alt={ingredient.name}/>
+      <p className={'text text_type_main-medium mt-4 mb-8'}>{ingredient.name}</p>
       <div>
         <ul className={styles.info}>
           <li className={`${styles.info__item} text text_type_main-default text_color_inactive`}>Калории,ккал
-            <span className="text text_type_digits-default">{props.item.calories}</span>
+            <span className="text text_type_digits-default">{ingredient.calories}</span>
           </li>
           <li className={`${styles.info__item} text text_type_main-default text_color_inactive`}>Белки, г
-            <span className="text text_type_digits-default">{props.item.proteins}</span>
+            <span className="text text_type_digits-default">{ingredient.proteins}</span>
           </li>
           <li className={`${styles.info__item} text text_type_main-default text_color_inactive`}>Жиры, г
-            <span className="text text_type_digits-default">{props.item.fat}</span>
+            <span className="text text_type_digits-default">{ingredient.fat}</span>
           </li>
           <li className={`${styles.info__item} text text_type_main-default text_color_inactive`}>Углеводы, г
-            <span className="text text_type_digits-default">{props.item.carbohydrates}</span>
+            <span className="text text_type_digits-default">{ingredient.carbohydrates}</span>
           </li>
         </ul>
       </div>
@@ -29,15 +30,4 @@ function IngredientDetails(props) {
   )
 }
 
-IngredientDetails.propTypes = {
-  data: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    calories: PropTypes.number.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired
-  }),
-  item: PropTypes.object.isRequired
-}
 export default IngredientDetails

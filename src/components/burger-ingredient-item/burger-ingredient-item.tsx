@@ -1,10 +1,17 @@
 import React from "react";
 import styles from './burger-ingredient-item.module.css'
-import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Counter,
+  CurrencyIcon
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
+import {RootStateOrAny, useSelector} from "react-redux";
 
 function BurgerIngredientItem ({item}) {
+  const constructors = useSelector((state:RootStateOrAny) => state.constructors);
+  const countBunConstructor = constructors.bun.filter((i) => i._id === item._id).length
+  const countIngredientConstructor = constructors.constructor.filter((i) => i._id === item._id).length
   const {image, price, name } = item;
   const [{ isDrag }, dragRef] = useDrag({
     type: "ingredients",
@@ -13,6 +20,7 @@ function BurgerIngredientItem ({item}) {
       isDrag: monitor.isDragging()
     })
   });
+
   return (
     !isDrag && (
     <a ref={dragRef}  className={styles.product__link} href='#'>
@@ -22,6 +30,9 @@ function BurgerIngredientItem ({item}) {
         <CurrencyIcon type="primary" />
       </div>
       <h3 className={`${styles.product__title} text text_type_main-default`}>{name}</h3>
+      {countIngredientConstructor > 0 && <Counter count={countIngredientConstructor} size='default' />}
+      {countBunConstructor> 0 && <Counter count={countBunConstructor} size='default' />}
+
     </a>
     )
   )

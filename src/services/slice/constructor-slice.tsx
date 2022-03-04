@@ -12,7 +12,7 @@ const initialState = {
   constructor: [],
   bun: [],
   orderLoadingStatus: null,
-  order: []
+  order: null,
 };
 
 export const fetchOrder = createAsyncThunk(
@@ -33,37 +33,36 @@ export const constructorSlice = createSlice({
       },// @ts-ignore
       prepare: (item) => {
         const id:string = nanoid()
-       // @ts-ignore
         return { payload: {id, ...item} }
       },
     },
     setBun: (state, action) => {
       state.bun.splice(0, 1, action.payload)
     },
-
+    removeOrderModal: (state, action) => {
+      state.order = action.payload;
+    },
     moveIngredient: (state, action)=> {
       const ingredientsNew = state.constructor
-      // @ts-ignore
-      console.log(action.payload.hover)
       ingredientsNew[action.payload.drag] = ingredientsNew.splice(action.payload.hover, 1, ingredientsNew[action.payload.drag])[0];
-      // ingredientsNew.splice(action.payload.drag, 0, ingredientsNew.splice(action.payload.hover, 1)[0])
       state.constructor = ingredientsNew
       },
       deleteIngredient: (state, action) => {
-        // state.constructor.removeOne(state, action.payload);// @ts-ignore
+        state.constructor = state.constructor.filter(item => item.id !== action.payload)
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrder.pending, state => {state.orderLoadingStatus = 'loading'
-      })
+      .addCase(fetchOrder.pending, state => {state.orderLoadingStatus = 'loading'})
       .addCase(fetchOrder.fulfilled, (state, action) => {
         state.orderLoadingStatus = 'idle';
         state.bun = [];
         state.constructor = [];
+        state.order = action.payload;
       })
       .addCase(fetchOrder.rejected, state => {
         state.orderLoadingStatus = 'error';
+        state.order = null;
       })
       .addDefaultCase(() => {})
   }
@@ -72,11 +71,11 @@ export const constructorSlice = createSlice({
 const {actions, reducer} = constructorSlice;
 
 export default reducer;
-// @ts-ignore
 
 export const {
   setConstructor,
   setBun,
   moveIngredient,
-  // deleteIngredient
+  removeOrderModal,
+  deleteIngredient
 } = actions;
