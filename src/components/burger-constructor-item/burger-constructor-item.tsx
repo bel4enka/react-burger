@@ -85,9 +85,8 @@ BurgerConstructorItem.propTypes ={
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired
   }),
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   isLocked: PropTypes.bool.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number
 }

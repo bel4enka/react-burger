@@ -12,6 +12,8 @@ const initialState = {
   constructor: [],
   bun: [],
   orderLoadingStatus: null,
+  loading: false,
+  error: null,
   order: null,
 };
 
@@ -53,16 +55,21 @@ export const constructorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrder.pending, state => {state.orderLoadingStatus = 'loading'})
+      .addCase(fetchOrder.pending, state => {
+        state.loading = true;
+        state.error = false;
+      })
       .addCase(fetchOrder.fulfilled, (state, action) => {
-        state.orderLoadingStatus = 'idle';
+        state.loading = false;
+        state.error = false;
         state.bun = [];
         state.constructor = [];
         state.order = action.payload;
+
       })
       .addCase(fetchOrder.rejected, state => {
-        state.orderLoadingStatus = 'error';
-        state.order = null;
+        state.loading = false;
+        state.error = 'Не могу отправить заказ - ошибка';
       })
       .addDefaultCase(() => {})
   }

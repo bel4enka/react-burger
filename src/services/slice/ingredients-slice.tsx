@@ -8,8 +8,9 @@ const ingredientsAdapter = createEntityAdapter({
 });
 
 const initialState = ingredientsAdapter.getInitialState({
-  ingredientsLoadingStatus: 'idle',
   ingredient: null,
+  loading: false,
+  error: null,
 });
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
@@ -24,17 +25,21 @@ export const ingredientsSlice = createSlice({
   reducers: {
     ingredientModal: (state, action) => {
       state.ingredient = action.payload;
+      state.loading = true;
+      state.error = false;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredients.pending, state => {state.ingredientsLoadingStatus = 'loading'})
+      .addCase(fetchIngredients.pending, state => {state.loading = true})
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.ingredientsLoadingStatus = 'idle';
+        state.loading = false;
+        state.error = false;
         ingredientsAdapter.setAll(state, action.payload.data);
       })
       .addCase(fetchIngredients.rejected, state => {
-        state.ingredientsLoadingStatus = 'error';
+        state.loading = false;
+        state.error = 'Не могу получить данные ингредиентов';
       })
       .addDefaultCase(() => {})
   }
