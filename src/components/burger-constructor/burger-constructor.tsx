@@ -1,80 +1,108 @@
-import React, {useState} from "react";
+import React from "react";
 import styles from './burger-constructor.module.css'
 import {
-  Button,
-  ConstructorElement,
-  DragIcon
-} from "@ya.praktikum/react-developer-burger-ui-components";
+  setConstructor,
+  setBun,
+  fetchOrder, removeOrderModal
+} from "../../services/slice/constructor-slice";
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
+import { Button, ConstructorElement, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import TotalSum from "../total-sum/total-sum";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import PropTypes from "prop-types";
-import burgerIngredients from "../../utils/type";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import { useDrop } from 'react-dnd';
+import BurgerConstructorItem
+  from "../burger-constructor-item/burger-constructor-item";
 
-const BurgerConstructor = (props) => {
 
-  const [isOpen, setIsOpen] = useState(false)
 
-  function toggleModal() {
-    setIsOpen(!isOpen)
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+  const {bun, constructor, order} = useSelector((state:RootStateOrAny) => state.constructors);
+
+  const toggleModal = () =>{
+    dispatch(removeOrderModal(null))
+  }
+  const sendOrder = () => {
+    const ingredients = bun.concat(constructor).map(e => e._id)
+    // @ts-ignore
+    dispatch(fetchOrder(ingredients))
+
   }
 
-    return (
-
-      <section className={`${styles.cart} mt-25`}>
-        {isOpen &&
+  const [{isHover}, drop] = useDrop({
+    accept: 'ingredients',
+    drop: (item) => {
+      onDrop(item);
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    }),
+  });
+  const border = isHover ? '1px lightgreen solid' : 'none';
+  const onDrop = (item) => {
+    // @ts-ignore
+    item.type === 'bun' ? dispatch(setBun(item)) : dispatch(setConstructor(item))
+  }
+  const bunFirstElement = bun[0];
+  // @ts-ignore
+  return (
+      <section className={`${styles.cart} mt-25`} ref={drop} style={{border}}>
+        {order &&
 
           <Modal onClose={toggleModal}>
             <OrderDetails/>
           </Modal>
         }
 
-        { props.constr &&
-          <><div className={styles.cart__top}>
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={props.constr[0].name + ' (верх)'}
-              price={props.constr[0].price}
-              thumbnail={props.constr[0].image}
-            />
+          <div className={styles.cart__top}>
+            {bun.length?
+              <ConstructorElement
+                type="top"
+                isLocked={true}
+                text={bunFirstElement.name + ' (верх)'}
+                price={bunFirstElement.price}
+                thumbnail={bunFirstElement.image}
+              />: null
+            }
           </div>
-          <ul className={`${styles.carts__items} custom-scroll mt-4 mb-4`}>
-        {props.constr.map((item, i) => i > 0 && i < props.constr.length - 1 && (
-          <li className={`${styles.cart__item}`} key={item._id + i}>
-          <DragIcon type="primary"/>
-          <ConstructorElement
-          text={item.name}
-          price={item.price}
-          thumbnail={item.image}
-          />
-          </li>
-          )
-          )}
-          </ul>
+            {constructor.length || bun.length ?
+              <ul className={`${styles.carts__items} custom-scroll mt-4 mb-4`}>
+
+                {constructor.map((item, index) => item.type !== 'bun' && (
+                  // @ts-ignore
+                      <BurgerConstructorItem key={item.id} item={item} isLocked={false} id={item._id} index={index} constructor={constructor}/>
+                  )
+                )}
+              </ul>:
+              <p className={'mt-30 text text_type_main-default '}>Чтобы сделать заказ, перетащите ингредиенты слева. </p>
+            }
           <div className={styles.cart__bottom}>
 
-          <ConstructorElement
-          type="bottom"
-          isLocked={true}
-          text={props.constr[0].name + ' (низ)'}
-          price={props.constr[0].price}
-          thumbnail={props.constr[0].image}
-          />
+            {bun.length?
+              <ConstructorElement
+                type="bottom"
+                isLocked={true}
+                text={bunFirstElement.name + ' (низ)'}
+                price={bunFirstElement.price}
+                thumbnail={bunFirstElement.image}
+              />: null
+            }
           </div>
-          <div className={`${styles.total} mt-10`}>
-          <TotalSum products={props.constr}/>
-          <Button type="primary" size="medium" onClick={toggleModal}>
-          <span className="text text_type_main-default">Оформить заказ</span>
-          </Button>
-          </div></>}
+
+              <div className={`${styles.total} mt-10`}>
+              <TotalSum/>
+              <Button
+                type="primary" size="medium"
+                onClick={() => {sendOrder()}}
+                disabled={(bun.length === 0 || !constructor)}
+              >
+              <span className="text text_type_main-default disabled">Оформить заказ</span>
+              </Button>
+              </div>
 
       </section>
-
     )
-}
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(burgerIngredients)
 }
 export default BurgerConstructor;

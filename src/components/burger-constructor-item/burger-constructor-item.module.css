@@ -1,0 +1,7 @@
+.cart__item {
+  display: flex;
+  align-items: center;
+}
+.drag_icon {
+  cursor: move;
+}
