@@ -1,0 +1,22 @@
+.form_section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: center;
+}
+.options_section {
+  text-align: center;
+}
+
+.options_link {
+  color: #4C4CFF;
+  text-decoration: none;
+}

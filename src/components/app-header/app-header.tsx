@@ -6,41 +6,48 @@ import {
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { NavLink } from 'react-router-dom';
 
 
 
 function AppHeader() {
+
   return (
     <header className={`${styles.header} pt-4 pb-4`}>
       <div className={styles.header__wrap}>
-        <nav className={styles.header__nav}>
+        <nav >
           <ul className={styles.nav}>
 
-            <li className={styles.nav__item}>
-              <a className={styles.nav__link} href="#">
+            <li>
+              <NavLink to="/" exact={true} className={`${styles.nav__link} text text_color_inactive`} activeClassName={styles.nav__link_type_active}>
                 <BurgerIcon type="primary" />
-                <span className={`${styles.nav__title} ml-2 text text_type_main-default`}>Конструктор</span>
-              </a>
+                <span className="ml-2">Конструктор</span>
+              </NavLink>
             </li>
 
-            <li className={styles.nav__item}>
-              <a className={styles.nav__link} href="#">
+            <li>
+              <NavLink exact={true} className={`${styles.nav__link} text text_color_inactive text_type_main-default`} activeClassName={styles.nav__link_type_active} to="/test" >
                 <ListIcon type="secondary" />
-                <span className={`${styles.nav__title} text text_type_main-default text_color_inactive ml-2`}>Лента заказов</span>
-              </a>
+                <span className={`text text_type_main-default ml-2`}>Лента заказов</span>
+              </NavLink>
             </li>
           </ul>
         </nav>
 
-        <a className={styles.logo} href={'#'}> <Logo/> </a>
+        <NavLink to="/" exact={true}> <Logo/> </NavLink>
 
-        <div className={styles.profile}>
-          <a className={styles.profile__link} href="#">
+        <div>
+          <NavLink
+            exact={true}
+            to="/profile"
+            activeClassName={styles.profile__link_type_active}
+            className={`${styles.profile__link} text text_color_inactive text_type_main-default`}
+            >
             <ProfileIcon type="secondary" />
-            <span className={`${styles.profile__title} text text_type_main-default text_color_inactive ml-2`}>
+            <span className={` ml-2`}>
               Личный кабинет
             </span>
-          </a>
+          </NavLink>
         </div>
       </div>
     </header>
