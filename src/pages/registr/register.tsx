@@ -2,12 +2,17 @@ import styles from './register.module.css'
 import React, {useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
-
-
-
+import {
+  fetchRegister
+} from "../../services/slice/auth-sclice";
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import { Redirect, useLocation } from 'react-router-dom';
 
 export const Register = () => {
+  const {loggedIn, loggedInErr} = useSelector((state:RootStateOrAny) => state.auth);
+  const location = useLocation();
 
+  const dispatch = useDispatch();
   const [input, setInput] = useState({
     name: '',
     email: '',
@@ -20,8 +25,14 @@ export const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // @ts-ignore
+    dispatch(fetchRegister(input))
   }
-
+  if (loggedIn) {
+    return <Redirect
+      to={location?.state?.from || '/' }
+    />
+  }
   return (
     <section className={styles.form_section}>
       <form className={`${styles.form} input_size_default`} onSubmit={handleSubmit}>
@@ -52,7 +63,11 @@ export const Register = () => {
           Зарегистрироваться
         </Button>
         </div>
+
       </form>
+      {loggedInErr &&
+        <span className={`${styles.error} text text_type_main-medium mt-2`}>Ошибка!</span>
+      }
       <section className={`${styles.options_section} mt-20`}>
         <p className={'text text_type_main-default'}>Уже зарегистрированы?
         <Link

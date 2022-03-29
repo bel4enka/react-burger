@@ -1,13 +1,16 @@
 import styles from '../registr/register.module.css'
 import React, {useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
-import {fetchForgotPassword, test} from "../../services/slice/auth-sclice";
+import { Link, Redirect } from 'react-router-dom';
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
+import {fetchForgotPassword} from "../../services/slice/auth-sclice";
 
 
 export const ForgotPassword = () => {
+
   const dispatch = useDispatch();
+
+  const {forgotPasswordOk, loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
 
   const [input, setInput] = useState({
     email: ''
@@ -20,10 +23,16 @@ export const ForgotPassword = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // @ts-ignore
-
     dispatch(fetchForgotPassword(input.email))
   }
-
+  if(forgotPasswordOk) {
+    return (
+      <Redirect to='/reset-password' />
+    )
+  }
+  if(loggedIn) {
+    return <Redirect to={'/'} />
+  }
   return (
     <section className={styles.form_section}>
       <form className={`${styles.form} input_size_default`} onSubmit={handleSubmit}>

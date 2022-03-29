@@ -1,32 +1,47 @@
 import React, {useEffect, useState, useReducer, useMemo} from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
-import {
-  fetchIngredients,
-  ingredientModal
-} from "../../services/slice/ingredients-slice";
-import { useDispatch} from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { fetchIngredients, ingredientModal } from "../../services/slice/ingredients-slice";
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
+import { BrowserRouter as Router, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Login, Home, Register, ForgotPassword, ResetPassword, Profile, NotFound404 } from '../../pages'
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
+import {ProtectedRoute} from "../protected-route/protected-route";
 
 
 function App() {
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchIngredients())
   }, []);
 
+
+  const ModalToggle = () => {
+ // переписать!!!!
+    const location = useLocation();
+    const history = useHistory();
+    const ingredient = location.state && location.state.ingredient;
+
+
+    const toggleModal = () => {
+      history.goBack();
+    };
+
   return (
-    <Router>
+    <>
       <AppHeader/>
       <main className={styles.main}>
-        <Switch>
+        <Switch location={ingredient || location}>
 
           <Route exact path="/">
             <Home/>
+          </Route>
+
+          <Route path='/ingredients/:id' exact={true}>
+            <IngredientDetails />
           </Route>
 
           <Route exact path="/register">
@@ -41,9 +56,9 @@ function App() {
             <ResetPassword/>
           </Route>
 
-          <Route exact path="/profile">
+          <ProtectedRoute exact path="/profile">
             <Profile/>
-          </Route>
+          </ProtectedRoute>
 
           <Route exact path="/login">
             <Login/>
@@ -54,16 +69,21 @@ function App() {
           </Route>
 
         </Switch>
-
-        {ingredientModal &&
+        {ingredient &&
           <Route path='/ingredients/:id'>
-            <Modal onClose={ontoggle} title="Детали ингредиента">
-              <IngredientDetails />
+            <Modal onClose={toggleModal} title={'Детали ингредиента'}>
+              <IngredientDetails/>
             </Modal>
           </Route>
         }
       </main>
-    </Router>
+    </>
     );
+  }
+  return (
+    <Router>
+      <ModalToggle />
+    </Router>
+  );
 }
 export default App

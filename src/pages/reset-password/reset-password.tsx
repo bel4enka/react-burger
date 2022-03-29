@@ -1,17 +1,21 @@
 import styles from '../registr/register.module.css'
 import React, {useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from 'react-router-dom';
-import {ForgotPassword} from "../forgot-password/forgot-password";
+import { Link, Redirect } from 'react-router-dom';
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import {fetchUpdatePassword} from "../../services/slice/auth-sclice";
 
 
 
 
 export const ResetPassword = () => {
 
+  const {loggedIn, forgotPasswordOk, resetPasswordOk} = useSelector((state:RootStateOrAny) => state.auth);
+
+  const dispatch = useDispatch();
   const [input, setInput] = useState({
     password: '',
-    code: ''
+    token: ''
   })
 
   const onChange = (e) => {
@@ -20,7 +24,21 @@ export const ResetPassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // @ts-ignore
+    dispatch(fetchUpdatePassword(input))
   }
+
+  if(loggedIn) {
+    return <Redirect to={'/'} />
+  }
+
+  if(!forgotPasswordOk) {
+    return <Redirect to={'/login'} />
+  }
+  if(resetPasswordOk) {
+    return <Redirect to={'/login'} />
+  }
+
   return (
     <section className={styles.form_section}>
       <form className={`${styles.form} input_size_default`} onSubmit={handleSubmit}>
@@ -35,8 +53,8 @@ export const ResetPassword = () => {
           type={'text'}
           placeholder={'Введите код из письма'}
           onChange={onChange}
-          value={input.code}
-          name={'code'}
+          value={input.token}
+          name={'token'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}

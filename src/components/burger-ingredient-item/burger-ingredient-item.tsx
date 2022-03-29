@@ -7,11 +7,14 @@ import {
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
 import {RootStateOrAny, useSelector} from "react-redux";
+import { Link, useLocation } from 'react-router-dom';
+
 
 function BurgerIngredientItem ({item}) {
   const constructors = useSelector((state:RootStateOrAny) => state.constructors);
   const countBunConstructor = constructors.bun.filter((i) => i._id === item._id).length
   const countIngredientConstructor = constructors.constructor.filter((i) => i._id === item._id).length
+  const location = useLocation();
   const {image, price, name } = item;
   const [{ isDrag }, dragRef] = useDrag({
     type: "ingredients",
@@ -23,7 +26,7 @@ function BurgerIngredientItem ({item}) {
 
   return (
     !isDrag && (
-    <a ref={dragRef}  className={styles.product__link} href='#'>
+    <Link ref={dragRef} className={styles.product__link} to={{ pathname: `/ingredients/${item._id}`, state: { ingredient: location } }}>
       <img src={image} alt={name}/>
       <div className={styles.product__price}>
         <span className={'text text_type_digits-default'}>{price}</span>
@@ -33,7 +36,7 @@ function BurgerIngredientItem ({item}) {
       {countIngredientConstructor > 0 && <Counter count={countIngredientConstructor} size='default' />}
       {countBunConstructor> 0 && <Counter count={countBunConstructor} size='default' />}
 
-    </a>
+    </Link>
     )
   )
 

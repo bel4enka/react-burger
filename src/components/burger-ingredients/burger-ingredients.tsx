@@ -8,9 +8,9 @@ import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
 import  {selectAll, ingredientModal} from "../../services/slice/ingredients-slice";
 import store from "../../services";
+import { Route } from 'react-router-dom';
 
 const BurgerIngredients = () => {
-  const {ingredient} = useSelector((state:RootStateOrAny) => state.ingredients);
   const ingredients = selectAll(store.getState());
   const dispatch = useDispatch();
 
@@ -71,7 +71,7 @@ const BurgerIngredients = () => {
               <ul className={styles.product__items_list}>
 
                 {ingredients.map((item:any) => item.type === 'bun' && <li key={item._id}  onClick={()=>{toggleModal(item)}} >
-                  <BurgerIngredientItem item={item} handler={toggleModal} />
+                  <BurgerIngredientItem item={item} />
                 </li>)}
               </ul>
             </section>
@@ -80,7 +80,7 @@ const BurgerIngredients = () => {
               <h2 className={'text text_type_main-medium mt-10'}>Начинки</h2>
               <ul className={styles.product__items_list}>
                 {ingredients.map((item:any) => item.type === 'main' && <li key={item._id} onClick={()=>{toggleModal(item)}}>
-                  <BurgerIngredientItem item={item} handler={toggleModal}/>
+                  <BurgerIngredientItem item={item} />
                 </li>)}
               </ul>
             </section>
@@ -94,13 +94,9 @@ const BurgerIngredients = () => {
               </ul>
             </section></>
           </div>
-          {ingredient &&
 
-              <Modal onClose={toggleModal} title={'Детали ингредиента'}>
-                <IngredientDetails/>
-              </Modal>
-          }
         </section>
+
       )
 }
 

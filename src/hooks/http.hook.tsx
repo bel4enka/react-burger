@@ -5,12 +5,12 @@ export const useHttp = () => {
         try {
             const response = await fetch(url, {method, body, headers});
             if (!response.ok) {
-              new Error(`Could not fetch ${url}, status: ${response.status}`);
+              throw new Error(`Could not fetch ${url}, status: ${response.status}`);
             }
             return await response.json();
 
         } catch(e) {
-            console.log(e)
+          throw e;
         }
     };
 

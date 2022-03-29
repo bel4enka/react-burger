@@ -3,11 +3,20 @@ import React, {useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
 import {ForgotPassword} from "../forgot-password/forgot-password";
-
+import {
+  useDispatch,
+  useSelector,
+  RootStateOrAny
+} from "react-redux";
+import {fetchLogin} from "../../services/slice/auth-sclice";
+import { Redirect, useLocation } from 'react-router-dom';
 
 
 
 export const Login = () => {
+  const dispatch = useDispatch();
+  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const location = useLocation();
 
   const [input, setInput] = useState({
     email: '',
@@ -20,6 +29,14 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // @ts-ignore
+    dispatch(fetchLogin(input))
+  }
+
+  if (loggedIn) {
+    return <Redirect
+      to={location?.state?.from || '/' }
+    />
   }
   return (
     <section className={styles.form_section}>
