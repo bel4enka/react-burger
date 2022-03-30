@@ -26,7 +26,7 @@ function BurgerIngredientItem ({item}) {
 
   return (
     !isDrag && (
-    <Link ref={dragRef} className={styles.product__link} to={{ pathname: `/ingredients/${item._id}`, state: { ingredient: location } }}>
+    <Link ref={dragRef} className={styles.product__link} to={{ pathname: `/ingredients/${item._id}`, state: { background: location } }}>
       <img src={image} alt={name}/>
       <div className={styles.product__price}>
         <span className={'text text_type_digits-default'}>{price}</span>

@@ -4,9 +4,10 @@ import BurgerIngredients
   from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor
   from "../../components/burger-constructor/burger-constructor";
-import React from "react";
+
 
 export const Home = () => {
+
   return(
     <DndProvider backend={HTML5Backend}>
       <BurgerIngredients/>
