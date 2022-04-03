@@ -31,7 +31,6 @@ const BurgerConstructorItem = ({ item, type, isLocked, index}) => {
       if (!ref.current) {
         return;
       }
-
       // @ts-ignore
       const dragIndex = item.index;
       // @ts-ignore

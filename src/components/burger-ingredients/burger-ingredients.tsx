@@ -3,12 +3,9 @@ import styles from './burger-ingredients.module.css'
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BurgerIngredientItem
   from "../burger-ingredient-item/burger-ingredient-item";
-import Modal from "../modal/modal";
-import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
 import  {selectAll, ingredientModal} from "../../services/slice/ingredients-slice";
-import store from "../../services";
-import { Route } from 'react-router-dom';
+
 
 const BurgerIngredients = () => {
   const ingredients = useSelector(selectAll);

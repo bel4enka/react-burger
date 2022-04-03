@@ -239,7 +239,7 @@ export const authSlice = createSlice({
       .addCase(fetchUpdateToken.rejected, state => {
         console.log('fetchUpdateToken - rejected')
       })
-      .addCase(getUser.rejected, (state, action) => {
+      .addCase(getUser.rejected, () => {
         console.log('getUser - rejected')
       })
       .addDefaultCase(() => {})

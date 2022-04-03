@@ -39,7 +39,6 @@ function BurgerIngredientItem ({item}) {
     </Link>
     )
   )
-
 }
 BurgerIngredientItem.propTypes ={
   item: PropTypes.shape({

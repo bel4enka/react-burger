@@ -1,12 +1,9 @@
 import styles from '../registr/register.module.css'
-import React, {useRef, useState} from 'react';
+import React, { useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect } from 'react-router-dom';
 import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
 import {fetchUpdatePassword} from "../../services/slice/auth-sclice";
-
-
-
 
 export const ResetPassword = () => {
 
@@ -73,7 +70,8 @@ export const ResetPassword = () => {
           </Link>
         </p>
       </section>
-    </section>  );
+    </section>
+  );
 }
 
 

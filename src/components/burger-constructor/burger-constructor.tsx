@@ -15,8 +15,6 @@ import { useDrop } from 'react-dnd';
 import BurgerConstructorItem
   from "../burger-constructor-item/burger-constructor-item";
 
-
-
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const {bun, constructor, order} = useSelector((state:RootStateOrAny) => state.constructors);

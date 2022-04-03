@@ -5,10 +5,6 @@ export function ProtectedRoute({ children, ...rest }) {
 
   const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
 
-  // if (!loggedIn) {
-  //   return null;
-  // }
-
   return (
     <Route
       {...rest}

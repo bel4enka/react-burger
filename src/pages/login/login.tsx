@@ -10,8 +10,6 @@ import {
 import {fetchLogin} from "../../services/slice/auth-sclice";
 import { Redirect, useLocation } from 'react-router-dom';
 
-
-
 export const Login = () => {
   const dispatch = useDispatch();
   const {loggedIn, loggedInErr} = useSelector((state:RootStateOrAny) => state.auth);

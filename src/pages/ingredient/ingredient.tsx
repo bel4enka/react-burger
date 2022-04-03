@@ -1,13 +1,27 @@
 import { IngredientDetails } from '../../components/ingredient-details/ingredient-details';
 import styles from './ingredient.module.css';
-
+import { useParams } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import {selectAll} from "../../services/slice/ingredients-slice";
 export const IngredientsPage = () => {
+
+  const { id } = useParams();
+  const ingredients = useSelector(selectAll)
+
+  {/*// @ts-ignore*/}
+  const ingredient = ingredients.find(item => item._id === id);
+
   return (
-    <div className={styles.container}>
-      <div>
-        <h2 className={styles.title}>Детали ингредиента</h2>
-        <IngredientDetails />
-      </div>
-    </div>
+    <>
+      {ingredient &&
+        <div className={styles.wrap}>
+          {/*// @ts-ignore*/}
+          <div className={styles.center}>
+            <h2 className={`${styles.title} text text_type_main-large`}>Детали ингредиента</h2>
+            <IngredientDetails/>
+          </div>
+        </div>
+      }
+    </>
   )
 }

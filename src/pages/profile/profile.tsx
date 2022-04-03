@@ -7,7 +7,6 @@ import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-component
 import {
   logOut,
   fetchUpdateProfile,
-  dellProfileErr,
   dellProfileSuccess,
   fetchUpdateToken, setProfileErr
 } from "../../services/slice/auth-sclice";
@@ -33,24 +32,6 @@ export const Profile = () => {
     // @ts-ignore
 
     dispatch(fetchUpdateProfile(input))
-
-
-      // @ts-ignore
-      // .unwrap()
-      // .then((res) => {
-      //   console.log(res)
-      // })
-      // .catch(error => {
-      //   console.log(error)
-        // if(error.message === 'jwt expired') {
-        //
-        //   dispatch(fetchUpdateToken())
-        //   // dispatch(editUser(body))
-        // }
-        // else {
-        //   dispatch(setProfileErr())
-        // }
-      // })
   }
   useEffect(() => {
     if(loggedIn) {
@@ -65,6 +46,7 @@ export const Profile = () => {
   useEffect(() => {
     if(updateProfileErr) {
       // Надо продумать логику вызова редьюсеров ниже. Хотелось бы получать ответ, о том, что action.payload или action.error === jwt expired
+      //Но как это сделать я не знаю
       dispatch(fetchUpdateToken())
       // @ts-ignore
       dispatch(fetchUpdateProfile(input))

@@ -1,5 +1,5 @@
 import styles from './register.module.css'
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
 import {
@@ -76,7 +76,8 @@ export const Register = () => {
         </Link>
       </p>
         </section>
-    </section>  );
+    </section>
+  );
 }
 
 
