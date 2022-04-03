@@ -11,7 +11,7 @@ import store from "../../services";
 import { Route } from 'react-router-dom';
 
 const BurgerIngredients = () => {
-  const ingredients = selectAll(store.getState());
+  const ingredients = useSelector(selectAll);
   const dispatch = useDispatch();
 
 

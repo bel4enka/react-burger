@@ -36,8 +36,6 @@ const BurgerConstructor = () => {
       // @ts-ignore
       dispatch(fetchOrder(ingredients))
     }
-
-
   }
 
   const [{isHover}, drop] = useDrop({

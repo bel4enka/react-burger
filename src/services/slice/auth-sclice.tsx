@@ -70,13 +70,24 @@ export const fetchUpdateProfile = createAsyncThunk(
   'auth/fetchUpdateProfile',
   // @ts-ignore
   async (input) => {
+      const {request} = useHttp();
+      return await request(`${apiAuth}user`, 'PATCH', JSON.stringify(input),
+        {
+          // @ts-ignore
+          'Content-Type': 'application/json', 'Authorization': getCookie('accessToken'),
+        }
+      );
+  }
+);
+
+export const fetchUpdateToken = createAsyncThunk(
+  'auth/fetchUpdateToken',
+  // @ts-ignore
+  async () => {
     const {request} = useHttp();
-    return await request(`${apiAuth}user`,'PATCH', JSON.stringify(input),
-    {
-      // @ts-ignore
-      'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
-    }
-  );
+    const refreshToken = localStorage.getItem('refreshToken');
+    return await request(`${apiAuth}token`,'POST', JSON.stringify({token: refreshToken}),
+    );
   }
 );
 
@@ -86,6 +97,20 @@ export const fetchUpdatePassword = createAsyncThunk(
   async (input) => {
     const {request} = useHttp();
     return await request(`${apiForgotPass}reset`,'POST', JSON.stringify(input));
+  }
+);
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  // @ts-ignore
+  async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const {request} = useHttp();
+    return await request(`${apiAuth}user`,'GET', null ,
+      {
+        // @ts-ignore
+        'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
+      }
+    );
   }
 );
 
@@ -99,6 +124,9 @@ export const authSlice = createSlice({
     dellProfileSuccess: (state, action) => {
       state.updateProfileSuccess = action.payload;
     },
+    setProfileErr:(state) => {
+      state.updateProfileErr = true;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -106,8 +134,12 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = false;
       })
+      .addCase(getUser.pending, state => {
+        state.loading = true;
+        state.error = false;
+        console.log('pending getUser')
+      })
       .addCase(logOut.pending, state => {
-        console.log('pending logOut')
       })
       .addCase(fetchRegister.pending, state => {
         state.loading = true;
@@ -118,6 +150,10 @@ export const authSlice = createSlice({
         state.error = false;
       })
       .addCase(fetchUpdateProfile.pending, state => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(fetchUpdateToken.pending, state => {
         state.loading = true;
         state.error = false;
       })
@@ -158,13 +194,29 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = false;
         state.loggedIn = true;
+        console.log(action.payload)
         state.user.name = action.payload.user.name;
         state.user.email = action.payload.user.email;
         state.updateProfileSuccess = true;
       })
       .addCase(fetchUpdatePassword.fulfilled, (state, action) => {
-        console.log('Успех!')
         state.resetPasswordOk = true;
+      })
+      .addCase(fetchUpdateToken.fulfilled, (state, action) => {
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
+        setCookie('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        state.updateProfileErr = false;
+
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = false;
+        state.loggedIn = true;
+        state.user.name = action.payload.user.name;
+        state.user.email = action.payload.user.email;
+        state.updateProfileSuccess = true;
       })
       .addCase(fetchForgotPassword.rejected, state => {
         state.loading = false;
@@ -180,11 +232,15 @@ export const authSlice = createSlice({
         state.loggedInErr = true;
       })
       .addCase(logOut.rejected, state => {
-        console.log('rejected')
       })
-      .addCase(fetchUpdateProfile.rejected, state => {
+      .addCase(fetchUpdateProfile.rejected, (state, action) => {
         state.updateProfileErr = true;
-
+      })
+      .addCase(fetchUpdateToken.rejected, state => {
+        console.log('fetchUpdateToken - rejected')
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        console.log('getUser - rejected')
       })
       .addDefaultCase(() => {})
   }
@@ -196,5 +252,6 @@ export default reducer;
 
 export const {
   dellProfileErr,
-  dellProfileSuccess
+  dellProfileSuccess,
+  setProfileErr
 } = actions;

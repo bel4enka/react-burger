@@ -2,7 +2,6 @@ import styles from '../registr/register.module.css'
 import React, {useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
-import {ForgotPassword} from "../forgot-password/forgot-password";
 import {
   useDispatch,
   useSelector,
@@ -15,7 +14,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const {loggedIn, loggedInErr} = useSelector((state:RootStateOrAny) => state.auth);
   const location = useLocation();
 
   const [input, setInput] = useState({
@@ -38,6 +37,7 @@ export const Login = () => {
       to={location?.state?.from || '/' }
     />
   }
+
   return (
     <section className={styles.form_section}>
       <form className={`${styles.form} input_size_default`} onSubmit={handleSubmit}>
@@ -50,15 +50,22 @@ export const Login = () => {
           value={input.email}
           name={'email'}
           error={false}
-          errorText={'Ошибка'}
           size={'default'}
         />
-        <PasswordInput onChange={onChange} name={'password'} value={input.password} />
+        <PasswordInput
+          onChange={onChange}
+          name={'password'}
+          value={input.password} />
         <div>
-          <Button type="primary" size="large">
+          <Button type="primary" size="large" disabled={(input.email === '' && input.password === '')}>
             Войти
           </Button>
+
         </div>
+
+        {loggedInErr &&
+          <span className={`${styles.error} text text_type_main-medium mt-2`}>Ошибка! Проверьте e-mail или пароль</span>
+        }
       </form>
       <section className={`${styles.options_section} mt-20`}>
         <p className={'text text_type_main-default mb-4'}>Вы — новый пользователь?

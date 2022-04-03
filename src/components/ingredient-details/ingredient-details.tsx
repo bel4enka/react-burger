@@ -1,10 +1,28 @@
 import React from "react";
 import styles from './ingredient-details.module.css'
+import { useParams } from "react-router-dom";
 
-import {RootStateOrAny, useSelector} from "react-redux";
+import {RootStateOrAny, useSelector, useDispatch} from "react-redux";
+import {
+  fetchIngredients,
+  selectAll
+} from "../../services/slice/ingredients-slice";
 
-function IngredientDetails() {
-  const {ingredient} = useSelector((state:RootStateOrAny) => state.ingredients);
+export function IngredientDetails() {
+  const dispatch = useDispatch();
+  const {id} = useParams();
+
+  let {ingredient} = useSelector((state:RootStateOrAny) => state.ingredients)
+  const ingredients = useSelector(selectAll);
+
+
+  if(ingredient === null) {
+    dispatch(fetchIngredients())
+
+    // @ts-ignore
+    ingredient = ingredients.find(item => item._id === id)
+
+  }
 
   return(
     <>
