@@ -4,8 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 import {useHttp} from "../../hooks/http.hook";
 import {setCookie, getCookie, deleteCookie} from '../../utils/utils'
-const apiForgotPass = 'https://norma.nomoreparties.space/api/password-reset/'
-const apiAuth = 'https://norma.nomoreparties.space/api/auth/'
+import {baseUrl} from "../../utils/utils";
 
 const initialState = {
   user: {
@@ -30,7 +29,7 @@ export const fetchForgotPassword = createAsyncThunk(
   'auth/fetchForgotPassword',
   async (email) => {
     const {request} = useHttp();
-    return await request(apiForgotPass,'POST', JSON.stringify({'email': email}));
+    return await request(`${baseUrl}password-reset/`,'POST', JSON.stringify({'email': email}));
   }
 );
 
@@ -39,7 +38,7 @@ export const fetchRegister = createAsyncThunk(
   // @ts-ignore
   async ({name, email, password}) => {
     const {request} = useHttp();
-    return await request(`${apiAuth}register`,'POST', JSON.stringify({'email': email, 'name': name, 'password': password}));
+    return await request(`${baseUrl}auth/register`,'POST', JSON.stringify({'email': email, 'name': name, 'password': password}));
   }
 );
 
@@ -49,7 +48,7 @@ export const logOut = createAsyncThunk(
   async () => {
     const {request} = useHttp();
     const refreshToken = localStorage.getItem('refreshToken');
-    return await request(`${apiAuth}logout`,'POST', JSON.stringify({token: refreshToken}),
+    return await request(`${baseUrl}auth/logout`,'POST', JSON.stringify({token: refreshToken}),
       {
         // @ts-ignore
         'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
@@ -62,7 +61,7 @@ export const fetchLogin = createAsyncThunk(
   // @ts-ignore
   async (input) => {
     const {request} = useHttp();
-    return await request(`${apiAuth}login`,'POST', JSON.stringify(input));
+    return await request(`${baseUrl}auth/login`,'POST', JSON.stringify(input));
   }
 );
 
@@ -71,7 +70,7 @@ export const fetchUpdateProfile = createAsyncThunk(
   // @ts-ignore
   async (input) => {
       const {request} = useHttp();
-      return await request(`${apiAuth}user`, 'PATCH', JSON.stringify(input),
+      return await request(`${baseUrl}auth/user`, 'PATCH', JSON.stringify(input),
         {
           // @ts-ignore
           'Content-Type': 'application/json', 'Authorization': getCookie('accessToken'),
@@ -86,7 +85,7 @@ export const fetchUpdateToken = createAsyncThunk(
   async () => {
     const {request} = useHttp();
     const refreshToken = localStorage.getItem('refreshToken');
-    return await request(`${apiAuth}token`,'POST', JSON.stringify({token: refreshToken}),
+    return await request(`${baseUrl}auth/token`,'POST', JSON.stringify({token: refreshToken}),
     );
   }
 );
@@ -96,7 +95,7 @@ export const fetchUpdatePassword = createAsyncThunk(
   // @ts-ignore
   async (input) => {
     const {request} = useHttp();
-    return await request(`${apiForgotPass}reset`,'POST', JSON.stringify(input));
+    return await request(`${baseUrl}reset`,'POST', JSON.stringify(input));
   }
 );
 export const getUser = createAsyncThunk(
@@ -105,7 +104,7 @@ export const getUser = createAsyncThunk(
   async () => {
     const refreshToken = localStorage.getItem('refreshToken');
     const {request} = useHttp();
-    return await request(`${apiAuth}user`,'GET', null ,
+    return await request(`${baseUrl}auth/user`,'GET', null ,
       {
         // @ts-ignore
         'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
@@ -233,7 +232,7 @@ export const authSlice = createSlice({
       })
       .addCase(logOut.rejected, state => {
       })
-      .addCase(fetchUpdateProfile.rejected, (state, action) => {
+      .addCase(fetchUpdateProfile.rejected, state => {
         state.updateProfileErr = true;
       })
       .addCase(fetchUpdateToken.rejected, state => {

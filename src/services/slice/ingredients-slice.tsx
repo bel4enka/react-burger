@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import {useHttp} from '../../hooks/http.hook';
-const apiUrl = 'https://norma.nomoreparties.space/api/ingredients'
-
+import {baseUrl} from "../../utils/utils";
 const ingredientsAdapter = createEntityAdapter({
   // @ts-ignore
   selectId: (ingredient) => ingredient._id,
@@ -16,7 +15,7 @@ export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
     const {request} = useHttp();
-    return await request(apiUrl);
+    return await request(`${baseUrl}ingredients`);
   }
 );
 export const ingredientsSlice = createSlice({
