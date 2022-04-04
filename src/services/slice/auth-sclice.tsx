@@ -21,7 +21,7 @@ const initialState = {
   forgotPasswordErr: false,
   loading: false,
   error: null,
-  updateProfileErr: false,
+  updateProfileErr: null,
   updateProfileSuccess: false,
 };
 
@@ -36,11 +36,22 @@ export const fetchForgotPassword = createAsyncThunk(
 export const fetchRegister = createAsyncThunk(
   'auth/fetchRegister',
   // @ts-ignore
-  async ({name, email, password}) => {
-    const {request} = useHttp();
-    return await request(`${baseUrl}auth/register`,'POST', JSON.stringify({'email': email, 'name': name, 'password': password}));
+  async ({name, email, password}, { rejectWithValue }) => {
+    try {
+      const {request} = useHttp();
+      return await request(`${baseUrl}auth/register`, 'POST', JSON.stringify({
+        'email': email,
+        'name': name,
+        'password': password
+      }));
+    } catch (error) {
+      // @ts-ignore
+      return rejectWithValue(error.message);
+    }
   }
 );
+
+
 
 export const logOut = createAsyncThunk(
   'auth/logOut',
@@ -59,23 +70,34 @@ export const logOut = createAsyncThunk(
 export const fetchLogin = createAsyncThunk(
   'auth/fetchLogin',
   // @ts-ignore
-  async (input) => {
+  async (input, { rejectWithValue }) => {
+
     const {request} = useHttp();
-    return await request(`${baseUrl}auth/login`,'POST', JSON.stringify(input));
+    try {
+      return await request(`${baseUrl}auth/login`, 'POST', JSON.stringify(input));
+    } catch (err) {
+
+      // @ts-ignore
+      return rejectWithValue(err.message)
+    }
   }
 );
 
 export const fetchUpdateProfile = createAsyncThunk(
   'auth/fetchUpdateProfile',
   // @ts-ignore
-  async (input) => {
+  async (input, { rejectWithValue }) => {
       const {request} = useHttp();
+    try {
       return await request(`${baseUrl}auth/user`, 'PATCH', JSON.stringify(input),
         {
           // @ts-ignore
           'Content-Type': 'application/json', 'Authorization': getCookie('accessToken'),
         }
       );
+      // @ts-ignore
+    } catch (err) {return rejectWithValue(err.message)
+    }
   }
 );
 
@@ -136,7 +158,6 @@ export const authSlice = createSlice({
       .addCase(getUser.pending, state => {
         state.loading = true;
         state.error = false;
-        console.log('pending getUser')
       })
       .addCase(logOut.pending, state => {
       })
@@ -207,7 +228,6 @@ export const authSlice = createSlice({
         setCookie('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
         state.updateProfileErr = false;
-
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -222,18 +242,20 @@ export const authSlice = createSlice({
         state.error = 'Не могу отправить заказ - ошибка';
         state.forgotPasswordOk = false;
       })
-      .addCase(fetchRegister.rejected, state => {
+      .addCase(fetchRegister.rejected, (state, action) => {
         state.loading = false;
         state.loggedInErr = true;
+
       })
-      .addCase(fetchLogin.rejected, state => {
+      .addCase(fetchLogin.rejected, (state, action) => {
         state.loading = false;
         state.loggedInErr = true;
+        state.error = action.payload;
       })
       .addCase(logOut.rejected, state => {
       })
-      .addCase(fetchUpdateProfile.rejected, state => {
-        state.updateProfileErr = true;
+      .addCase(fetchUpdateProfile.rejected, (state,action) => {
+        state.updateProfileErr = action.payload;
       })
       .addCase(fetchUpdateToken.rejected, state => {
         console.log('fetchUpdateToken - rejected')
