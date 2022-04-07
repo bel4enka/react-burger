@@ -1,12 +1,9 @@
 import {
   createSlice,
-  createEntityAdapter,
   nanoid, createAsyncThunk,
 } from "@reduxjs/toolkit";
-import BurgerConstructor
-  from "../../components/burger-constructor/burger-constructor";
 import {useHttp} from "../../hooks/http.hook";
-const apiUrlOrder = 'https://norma.nomoreparties.space/api/orders'
+import {baseUrl} from "../../utils/utils";
 
 const initialState = {
   constructor: [],
@@ -21,7 +18,7 @@ export const fetchOrder = createAsyncThunk(
   'constructor/fetchOrder',
   async (ingredients) => {
     const {request} = useHttp();
-    return await request(apiUrlOrder,'POST', JSON.stringify({ingredients}));
+    return await request(`${baseUrl}orders`,'POST', JSON.stringify({ingredients}));
   }
 );
 

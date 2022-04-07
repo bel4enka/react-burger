@@ -6,29 +6,34 @@ import {
   fetchOrder, removeOrderModal
 } from "../../services/slice/constructor-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
-import { Button, ConstructorElement, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, ConstructorElement} from "@ya.praktikum/react-developer-burger-ui-components";
 import TotalSum from "../total-sum/total-sum";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import PropTypes from "prop-types";
+import { useHistory } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 import BurgerConstructorItem
   from "../burger-constructor-item/burger-constructor-item";
 
-
-
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const {bun, constructor, order} = useSelector((state:RootStateOrAny) => state.constructors);
+  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const history = useHistory();
 
   const toggleModal = () =>{
     dispatch(removeOrderModal(null))
   }
   const sendOrder = () => {
-    const ingredients = bun.concat(constructor).map(e => e._id)
-    // @ts-ignore
-    dispatch(fetchOrder(ingredients))
-
+    if(!loggedIn) {
+      history.replace({ pathname: '/login' });
+      return;
+    }
+    else {
+      const ingredients = bun.concat(constructor).map(e => e._id)
+      // @ts-ignore
+      dispatch(fetchOrder(ingredients))
+    }
   }
 
   const [{isHover}, drop] = useDrop({
