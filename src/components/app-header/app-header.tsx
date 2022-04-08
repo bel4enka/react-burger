@@ -24,7 +24,7 @@ function AppHeader() {
             </li>
 
             <li>
-              <NavLink exact={true} className={`${styles.nav__link} text text_color_inactive text_type_main-default`} activeClassName={styles.nav__link_type_active} to="/test" >
+              <NavLink exact={true} className={`${styles.nav__link} text text_color_inactive text_type_main-default`} activeClassName={styles.nav__link_type_active} to="/feed" >
                 <ListIcon type="secondary" />
                 <span className={`text text_type_main-default ml-2`}>Лента заказов</span>
               </NavLink>

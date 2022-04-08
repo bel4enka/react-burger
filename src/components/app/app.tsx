@@ -4,7 +4,7 @@ import styles from './app.module.css'
 import { fetchIngredients} from "../../services/slice/ingredients-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
-import { Login, Home, Register, ForgotPassword, ResetPassword, IngredientsPage, Profile, NotFound404 } from '../../pages'
+import { Login, Home, Register, ForgotPassword, ResetPassword, IngredientsPage, Profile, NotFound404, Feed, FeedItem, Orders, OrderItem } from '../../pages'
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import {ProtectedRoute} from "../protected-route/protected-route";
@@ -78,6 +78,22 @@ function App() {
 
           <Route exact={true} path="/login">
             <Login/>
+          </Route>
+
+          <Route exact={true} path="/feed">
+            <Feed/>
+          </Route>
+
+          <Route exact={true} path="/feed/:id">
+            <FeedItem/>
+          </Route>
+
+          <ProtectedRoute exact={true} path="/profile/orders">
+            <Orders/>
+          </ProtectedRoute>
+
+          <Route exact={true} path="/profile/orders/:id">
+            <OrderItem/>
           </Route>
 
           <Route>
