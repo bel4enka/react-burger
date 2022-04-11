@@ -1,7 +1,23 @@
 import styles from './feed.module.css'
 import {OrdersList} from "../../components/orders-list/orders-list";
-
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
+import {
+  closedWSConnection, getWSMessage,
+  startWSConnection,
+} from "../../services/slice/websocket-slice"
+import {useEffect} from "react";
 export const Feed = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // @ts-ignore
+    dispatch(startWSConnection())
+    // @ts-ignore
+    return () => {
+      dispatch(closedWSConnection());
+    };
+  }, []);
+
 
   return (
     <div className={`${styles.wrap} mt-10`}>
