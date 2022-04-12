@@ -4,7 +4,7 @@ const initialState = {
   test: null,
   connect: false,
   errorWS: false,
-  orders: null
+  feedsOrders: null
 }
 
 
@@ -20,10 +20,9 @@ export const webSocketSlice = createSlice({
     },
     getWSMessage: (state, action) => {
 
-      state.orders = action.payload;
+      state.feedsOrders = action.payload.orders;
     },
     sendMessage: (state, action) => {
-
     },
 
     closedWSConnection: (state) => {
@@ -40,11 +39,13 @@ export const webSocketSlice = createSlice({
 });
 
 
-export default webSocketSlice.reducer;
+const {actions, reducer} = webSocketSlice;
+export default reducer;
+
 export const {
   startWSConnection,
   successWSConnection,
   errorWSConnection,
   closedWSConnection,
   getWSMessage,
-} = webSocketSlice.actions
+} = actions;

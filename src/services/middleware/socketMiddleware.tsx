@@ -19,7 +19,6 @@ export const socketMiddleware = ( wsUrl, wsActions) => {
         };
         // функция, которая вызывается при получении события от сервера
         socket.onmessage = event => {
-          console.log(`Получены данные: ${event.data}`)
           const { data } = event;
           const parsedData = JSON.parse(data);
           dispatch(wsMessage(parsedData));

@@ -1,5 +1,5 @@
 export const baseUrl = 'https://norma.nomoreparties.space/api/'
-export const wsUrl = 'wss://norma.nomoreparties.space/api/orders/all'
+export const wsUrl = 'wss://norma.nomoreparties.space/orders/all'
 
 export function getCookie(name) {
   const matches = document.cookie.match(
@@ -34,3 +34,17 @@ export function setCookie(name, value, props) {
 export function deleteCookie(name) {
   setCookie(name, null, { expires: -1 });
 }
+
+export function statusOrder (status) {
+  switch (status) {
+    case 'done':
+      return 'Выполнен'
+    case 'pending':
+      return 'Готовится';
+    case 'created':
+      return 'Создан';
+    default:
+      return status;
+  }
+}
+

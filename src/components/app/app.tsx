@@ -13,10 +13,6 @@ import {
   getUser
 } from "../../services/slice/auth-sclice";
 
-import {
-  startWSConnection,
-  successWSConnection
-} from "../../services/slice/websocket-slice"
 
 
 function App() {
@@ -34,10 +30,7 @@ function App() {
 
     if(refreshToken) {
       dispatch(getUser())
-
       // @ts-ignore
-
-
       if(!loggedIn) {
         dispatch(fetchUpdateToken())
         // @ts-ignore

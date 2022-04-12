@@ -10,7 +10,7 @@ export const Orders = () => {
       <div className={styles.wrap}>
         <ProfileMenu/>
         <section className={styles.orders_list}>
-          <OrdersList/>
+          {/*<OrdersList/>*/}
         </section>
      </div>
     </>

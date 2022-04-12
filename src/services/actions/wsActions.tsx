@@ -8,5 +8,4 @@ export const wsActions = {
   wsOpen: webSocketSlice.actions.successWSConnection,
   wsClose: webSocketSlice.actions.closedWSConnection,
   wsError: webSocketSlice.actions.errorWSConnection,
-
 };
