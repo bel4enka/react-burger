@@ -5,9 +5,25 @@ import {statusOrder} from "../../utils/utils";
 import { ImageListItem} from "../images-list/images-list";
 import {selectAll} from "../../services/slice/ingredients-slice";
 
-export const OrdersList = ({order}) => {
+export const OrdersList = ({order, idIngredients}) => {
+  const ingredients = useSelector(selectAll);
 
-  const idIngredients = order.ingredients;
+  const searchIngredient = value => {
+    // @ts-ignore
+   return ingredients.filter(ingredient => ingredient._id === value);
+  }
+
+  const searchIngredientsImages = id => {
+    return id.map(item => {
+      const listImages = searchIngredient(item);
+      // @ts-ignore
+      if (listImages.length) {
+        // @ts-ignore
+        return listImages[0].image;
+      }
+    });
+  }
+  const ingredientsImages = searchIngredientsImages(idIngredients);
 
   return (
     <>
@@ -20,9 +36,10 @@ export const OrdersList = ({order}) => {
         <span className={'text text_type_main-small'}>{statusOrder(order.status)}</span>
         <div className={styles.item_desc}>
           <ul className={styles.desc_images}>
-            {idIngredients.map((id, i)=>
+            {ingredientsImages.length > 0 &&  (
               // @ts-ignore
-                  <ImageListItem id={id} key={id+i} />)}
+              <ImageListItem ingredientsImages={ingredientsImages} />
+            )}
           </ul>
           <div className={styles.price}>
             <span className={'text_type_digits-default'}>123</span>

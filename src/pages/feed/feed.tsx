@@ -18,7 +18,6 @@ export const Feed = () => {
   }, []);
 
   const {feedsOrders} = useSelector((state:RootStateOrAny) => state.webSocket);
-
    return  (
 
       <div className={`${styles.wrap} mt-10`}>
@@ -28,7 +27,9 @@ export const Feed = () => {
         <section className={styles.feeds}>
           {feedsOrders &&
             feedsOrders.map((item:any) => (
-              <OrdersList key={item._id} order={item}/>
+
+               // @ts-ignore
+              <OrdersList key={item._id} order={item} idIngredients={item.ingredients}  />
             ))
           }
 

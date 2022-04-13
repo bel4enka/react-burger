@@ -1,17 +1,35 @@
 import styles from "../orders-list/orders-list.module.css";
-import {RootStateOrAny, useSelector} from "react-redux";
-import {selectAll} from "../../services/slice/ingredients-slice";
+import {nanoid} from "@reduxjs/toolkit";
 
-export const ImageListItem = ({id}) => {
-  const ingredients = useSelector(selectAll);
 
-// @ts-ignore
-  const searchIngredient = ingredients.filter((item) => item._id === id)
-  // console.log(searchIngredient[0].image)
+export const ImageListItem = ({ingredientsImages}) => {
+
+  // const ingredientsImagesSmall = (ingredientsImages) => {
+  //   if (ingredientsImages.length > 5) {
+  //    return  ingredientsImages.slice(0, 5)
+  //   }
+  //   else {
+  //     return ingredientsImages
+  //   }
+  // }
 
   return (
-    <li className={styles.images}>
-       <img className={styles.img} src={'idImage'} alt={'ингредиент'}/>
-    </li>
+    <>
+      {ingredientsImages.slice(0, 6).map((item, i) => {
+        if (i < 5) {
+          return (
+            <li key={i} className={styles.images} >
+              <img className={styles.img} src={item} alt={'ингредиент'}/>
+            </li>)
+        } else {
+          return (
+            <li key={i} className={`${styles.images} ${styles.last_images}`}>
+              <img className={`${styles.img} ${styles.last_img}`} src={item} alt={'ингредиент'}/>
+              <span className={`${styles.over} text_type_digits-default`}> +{ingredientsImages.length - 5} </span>
+            </li>)
+        }
+      })}
+    </>
   )
+
 }

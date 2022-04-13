@@ -58,3 +58,15 @@
   display: flex;
   gap: 10px;
 }
+.last_images {
+  position: relative;
+}
+.over {
+  position: absolute;
+  left: 1px;
+  bottom: 31px;
+}
+.last_img {
+  background: #1C1C21;
+  opacity: 0.6;
+}
