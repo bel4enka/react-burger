@@ -6,7 +6,6 @@
   width: 100%;
   justify-items: stretch;
   column-gap: 60px;
-
 }
 .title {
   grid-column: 1/-1;
@@ -23,7 +22,7 @@
 .orders_info {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, auto);
   justify-items: stretch;
   row-gap: 60px;
 }
@@ -51,6 +50,13 @@
   margin: 0;
   list-style-type: none;
   padding: 0;
+  max-height: 200px;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  overflow: hidden;
+  column-gap: 15px;
 }
 
 .status_all {
@@ -58,4 +64,5 @@
 }
 .status_list_color {
   color: #00CCCC;
+
 }

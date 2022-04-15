@@ -4,7 +4,7 @@ import styles from './app.module.css'
 import { fetchIngredients} from "../../services/slice/ingredients-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
-import { Login, Home, Register, ForgotPassword, ResetPassword, IngredientsPage, Profile, NotFound404, Feed, FeedItem, Orders, OrderItem } from '../../pages'
+import { Login, Home, Register, ForgotPassword, ResetPassword, IngredientsPage, Profile, NotFound404, Feed, FeedItemPage, Orders, OrderItem } from '../../pages'
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import {ProtectedRoute} from "../protected-route/protected-route";
@@ -21,6 +21,7 @@ function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const background = location.state && location.state.background;
+
   const modal = (window.history.state != null) ? (window.history.state.modal || false) : false;
   const refreshToken = localStorage.getItem('refreshToken');
   const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
@@ -45,11 +46,10 @@ function App() {
   };
   return (
     <>
-
       <AppHeader/>
 
       <main className={styles.main}>
-        <Switch location={background || location}>
+        <Switch location={background || location }>
 
           <Route exact={true} path="/">
             <Home/>
@@ -57,7 +57,13 @@ function App() {
 
           <Route path="/ingredients/:id" exact={true}>
             {!modal &&
-              <IngredientsPage />
+              <OrderItem />
+            }
+          </Route>
+
+          <Route exact={true} path="/feed/:id">
+            {!modal &&
+              <OrderItem/>
             }
           </Route>
 
@@ -85,9 +91,7 @@ function App() {
             <Feed/>
           </Route>
 
-          <Route exact={true} path="/feed/:id">
-            <FeedItem/>
-          </Route>
+
 
           <ProtectedRoute exact={true} path="/profile/orders">
             <Orders/>
@@ -103,11 +107,21 @@ function App() {
 
         </Switch>
         {background &&
+          <Switch>
+
           <Route path='/ingredients/:id' >
             <Modal onClose={toggleModal} title={'Детали ингредиента'}>
               <IngredientDetails/>
             </Modal>
           </Route>
+
+
+          <Route path='/feed/:id' >
+            <Modal onClose={toggleModal} title={'Детали заказа'}>
+              <OrderItem/>
+            </Modal>
+          </Route>
+          </Switch>
         }
       </main>
     </>

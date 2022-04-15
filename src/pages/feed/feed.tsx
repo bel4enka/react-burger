@@ -4,6 +4,7 @@ import {OrdersList} from "../../components/orders-list/orders-list";
 import {useSelector, useDispatch, RootStateOrAny} from 'react-redux';
 import { closedWSConnection, startWSConnection} from "../../services/slice/websocket-slice"
 import {useEffect} from "react";
+import {nanoid} from "@reduxjs/toolkit";
 export const Feed = () => {
 
   const dispatch = useDispatch();
@@ -17,7 +18,12 @@ export const Feed = () => {
     };
   }, []);
 
-  const {feedsOrders} = useSelector((state:RootStateOrAny) => state.webSocket);
+  const {feedsOrders, feed} = useSelector((state:RootStateOrAny) => state.webSocket);
+  const findNumbers = (status) => {
+    return feedsOrders.filter((item) => item.status === status);
+  }
+
+
    return  (
 
       <div className={`${styles.wrap} mt-10`}>
@@ -39,46 +45,35 @@ export const Feed = () => {
           <div className={styles.done}>
             <h2 className={'text text_type_main-medium mb-6'}>Готовы:</h2>
             <ul className={`${styles.status_list} ${styles.status_list_color}`}>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034533
-              </li>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034534
-              </li>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034535
-              </li>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034536
-              </li>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034537
-              </li>
+              {feedsOrders &&
+                (findNumbers('done').map((item)=>
+                  <li key={nanoid()} className={`${styles.status_item} text text_type_digits-default`}>{item.number}
+                  </li>))}
             </ul>
           </div>
 
           <div className={styles.work}>
             <h2 className={'text text_type_main-medium mb-6'}>В работе:</h2>
             <ul className={styles.status_list}>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034538
-              </li>
-              <li
-                className={`${styles.status_item} text text_type_digits-default`}>034539
-              </li>
+              {feedsOrders &&
+                (findNumbers('pending').map((item)=>
+              <li key={nanoid()} className={`${styles.status_item} text text_type_digits-default`}>{item.number}
+              </li>))}
             </ul>
           </div>
 
           <div className={styles.all_done}>
             <h2 className={'text text_type_main-medium'}>Выполнено за все
               время:</h2>
-            <span className={`${styles.status_all} text text_type_digits-large`}>28 752</span>
+            {feed &&
+            <span className={`${styles.status_all} text text_type_digits-large`}>{feed.total}</span>}
           </div>
           <div className={styles.done_today}>
             <h2 className={'text text_type_main-medium'}>Выполнено за
               сегодня:</h2>
+            {feed &&
             <span
-              className={`${styles.status_all} text text_type_digits-large`}>138</span>
+              className={`${styles.status_all} text text_type_digits-large`}>{feed.totalToday}</span>}
           </div>
         </section>
       </div>

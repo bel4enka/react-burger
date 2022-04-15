@@ -4,9 +4,12 @@ import {RootStateOrAny, useSelector} from "react-redux";
 import {statusOrder} from "../../utils/utils";
 import { ImageListItem} from "../images-list/images-list";
 import {selectAll} from "../../services/slice/ingredients-slice";
+import { Link, useLocation } from 'react-router-dom';
+
 
 export const OrdersList = ({order, idIngredients}) => {
   const ingredients = useSelector(selectAll);
+  const location = useLocation();
 
   const searchIngredient = value => {
     // @ts-ignore
@@ -23,11 +26,21 @@ export const OrdersList = ({order, idIngredients}) => {
       }
     });
   }
-  const ingredientsImages = searchIngredientsImages(idIngredients);
 
+  const searchIngredientsPrice = id => {
+    return id.map(item => {
+      const priceList = searchIngredient(item);
+      // @ts-ignore
+      if (priceList.length) {
+        // @ts-ignore
+        return priceList[0].price;
+      }
+    });
+  }
+  const price = searchIngredientsPrice(idIngredients).reduce((acc, price) => acc + price, 0)
   return (
     <>
-      <a className={styles.item} href='#'>
+      <Link className={styles.item} to={{ pathname: `/feed/${order._id}`, state: { background: location } }}>
         <div className={styles.item_header}>
           <span className={`${styles.item_id} text_type_digits-default`}>#{order.number}</span>
           <time className={`${styles.item_date} text text_color_inactive text_type_main-default`}>{order.createdAt}</time>
@@ -36,17 +49,14 @@ export const OrdersList = ({order, idIngredients}) => {
         <span className={'text text_type_main-small'}>{statusOrder(order.status)}</span>
         <div className={styles.item_desc}>
           <ul className={styles.desc_images}>
-            {ingredientsImages.length > 0 &&  (
-              // @ts-ignore
-              <ImageListItem ingredientsImages={ingredientsImages} />
-            )}
+              <ImageListItem ingredientsImages={searchIngredientsImages(idIngredients)} />
           </ul>
           <div className={styles.price}>
-            <span className={'text_type_digits-default'}>123</span>
+            <span className={'text_type_digits-default'}>{price}</span>
             <CurrencyIcon type="primary" />
           </div>
         </div>
-      </a>
+      </Link>
 
     </>
   )

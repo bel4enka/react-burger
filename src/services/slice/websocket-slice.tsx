@@ -4,7 +4,8 @@ const initialState = {
   test: null,
   connect: false,
   errorWS: false,
-  feedsOrders: null
+  feedsOrders: null,
+  feed: null,
 }
 
 
@@ -21,6 +22,7 @@ export const webSocketSlice = createSlice({
     getWSMessage: (state, action) => {
 
       state.feedsOrders = action.payload.orders;
+      state.feed = {total: action.payload.total, totalToday: action.payload.totalToday};
     },
     sendMessage: (state, action) => {
     },

@@ -25,7 +25,7 @@ export const ImageListItem = ({ingredientsImages}) => {
           return (
             <li key={i} className={`${styles.images} ${styles.last_images}`}>
               <img className={`${styles.img} ${styles.last_img}`} src={item} alt={'ингредиент'}/>
-              <span className={`${styles.over} text_type_digits-default`}> +{ingredientsImages.length - 5} </span>
+              <span className={`${styles.over} text_type_digits-default`}> +{ingredientsImages.length - 6} </span>
             </li>)
         }
       })}
