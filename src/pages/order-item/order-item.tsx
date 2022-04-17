@@ -1,17 +1,37 @@
 import styles from "./order-item.module.css"
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {RootStateOrAny, useSelector} from 'react-redux';
+import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {selectAll} from "../../services/slice/ingredients-slice";
 import {useParams} from "react-router-dom";
 import {statusOrder} from "../../utils/utils";
-import {useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import {createData} from "../../utils/utils";
 import {nanoid} from "@reduxjs/toolkit";
 import {useWebSocket} from "../../hooks/webSoket.hook";
+import {
+  fetchUpdateToken, getUser
+} from "../../services/slice/auth-sclice";
 
 
 
 export const OrderItem = () => {
+  const dispatch = useDispatch();
+
+  const refreshToken = localStorage.getItem('refreshToken');
+  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+
+  useEffect(() => {
+    if(refreshToken) {
+    dispatch(getUser())
+    // @ts-ignore
+    if(!loggedIn) {
+      dispatch(fetchUpdateToken())
+      // @ts-ignore
+      dispatch(getUser())
+    }
+  }
+
+}, []);
 
   useWebSocket()
   const { id } = useParams()

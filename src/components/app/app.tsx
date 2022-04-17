@@ -4,7 +4,19 @@ import styles from './app.module.css'
 import { fetchIngredients} from "../../services/slice/ingredients-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
-import { Login, Home, Register, ForgotPassword, ResetPassword,  Profile, NotFound404, Feed, Orders, OrderItem } from '../../pages'
+import {
+  Login,
+  Home,
+  Register,
+  ForgotPassword,
+  ResetPassword,
+  Profile,
+  NotFound404,
+  Feed,
+  Orders,
+  OrderItem,
+  IngredientsPage
+} from '../../pages'
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import {ProtectedRoute} from "../protected-route/protected-route";
@@ -55,9 +67,9 @@ function App() {
             <Home/>
           </Route>
 
-          <Route path="/ingredients/:id" exact={true}>
+          <Route exact={true} path="/ingredients/:id" >
             {!modal &&
-              <OrderItem />
+              <IngredientsPage />
             }
           </Route>
 
