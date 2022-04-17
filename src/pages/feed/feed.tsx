@@ -2,27 +2,17 @@ import React from "react";
 import styles from './feed.module.css'
 import {OrdersList} from "../../components/orders-list/orders-list";
 import {useSelector, useDispatch, RootStateOrAny} from 'react-redux';
-import { closedWSConnection, startWSConnection} from "../../services/slice/websocket-slice"
-import {useEffect} from "react";
 import {nanoid} from "@reduxjs/toolkit";
+import {useWebSocket} from "../../hooks/webSoket.hook";
 export const Feed = () => {
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(startWSConnection())
-    // @ts-ignore
-    return () => {
-      dispatch(closedWSConnection());
-    };
-  }, []);
+  const page = 'feed'
+  useWebSocket()
 
   const {feedsOrders, feed} = useSelector((state:RootStateOrAny) => state.webSocket);
   const findNumbers = (status) => {
     return feedsOrders.filter((item) => item.status === status);
   }
-
 
    return  (
 
@@ -35,7 +25,7 @@ export const Feed = () => {
             feedsOrders.map((item:any) => (
 
                // @ts-ignore
-              <OrdersList key={item._id} order={item} idIngredients={item.ingredients}  />
+              <OrdersList key={item._id} order={item} idIngredients={item.ingredients} page={page} />
             ))
           }
 

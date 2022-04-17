@@ -1,4 +1,4 @@
-export const socketMiddleware = ( wsUrl, wsActions) => {
+export const socketMiddleware = ( wsActions) => {
   return store => {
     let socket = null;
 
@@ -9,8 +9,7 @@ export const socketMiddleware = ( wsUrl, wsActions) => {
       const { wsInit, wsSendMessage, wsOpen, wsClose, wsError, wsMessage } = wsActions;
 
       if (type === wsInit) {
-
-        socket = new WebSocket(`${wsUrl}`);
+        socket = new WebSocket(payload);
       }
       if (socket) {
         socket.onopen = event => {

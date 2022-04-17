@@ -1,35 +1,24 @@
 import styles from "./order-item.module.css"
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
+import {RootStateOrAny, useSelector} from 'react-redux';
 import {selectAll} from "../../services/slice/ingredients-slice";
 import {useParams} from "react-router-dom";
 import {statusOrder} from "../../utils/utils";
-import {useEffect, useMemo} from "react";
-import {
-  closedWSConnection,
-  startWSConnection
-} from "../../services/slice/websocket-slice";
+import {useMemo} from "react";
+import {createData} from "../../utils/utils";
 import {nanoid} from "@reduxjs/toolkit";
+import {useWebSocket} from "../../hooks/webSoket.hook";
 
 
 
 export const OrderItem = () => {
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    // @ts-ignore
-    dispatch(startWSConnection())
-    // @ts-ignore
-    return () => {
-      dispatch(closedWSConnection());
-    };
-  }, []);
+  useWebSocket()
   const { id } = useParams()
 
   const {feedsOrders} = useSelector((state:RootStateOrAny) => state.webSocket);
 
-  const orders = (feedsOrders) =>feedsOrders?feedsOrders.filter(item => item._id === id)[0]:null
+  const orders = (feedsOrders) =>feedsOrders?feedsOrders.find(item => item._id === id):null
   const order = orders(feedsOrders)
 
   function useOrderIngredients(order) {
@@ -51,7 +40,6 @@ export const OrderItem = () => {
             newIngredient.count += 1;
             acc.total += newIngredient.ingredient.price;
           }
-
           return acc;
         }, { newIngredients: [], total: 0 })
       }
@@ -102,7 +90,7 @@ export const OrderItem = () => {
         <section className={styles.footer}>
           <time
             // @ts-ignore
-            className={`${styles.footer_date} text text_color_inactive text_type_main-default`}>{order.createdAt}
+            className={`${styles.footer_date} text text_color_inactive text_type_main-default`}>{createData(order.createdAt)}
           </time>
           <div className={styles.footer_price}>
             <span className={'text_type_digits-default'}>{newIngredient.total}</span>

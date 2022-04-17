@@ -7,7 +7,6 @@ import {Profile} from "./profile/profile";
 import {NotFound404} from "./not-found/not-found-404";
 import {IngredientsPage} from './ingredient/ingredient'
 import {Feed} from "./feed/feed";
-import {FeedItemPage} from './feed-item/feed-item-page'
 import {Orders} from './orders/orders'
 import {OrderItem} from "./order-item/order-item"
 
@@ -21,7 +20,6 @@ export {
   NotFound404,
   IngredientsPage,
   Feed,
-  FeedItemPage,
   Orders,
   OrderItem
 }

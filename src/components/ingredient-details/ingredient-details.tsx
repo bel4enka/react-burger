@@ -1,14 +1,10 @@
 import React, {useEffect, useMemo} from "react";
 import styles from './ingredient-details.module.css'
-import { useParams } from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {
-  fetchIngredients,
-  selectAll
-} from "../../services/slice/ingredients-slice";
+import {useParams } from "react-router-dom";
+import {useSelector} from "react-redux";
+import {selectAll} from "../../services/slice/ingredients-slice";
 
 export function IngredientDetails() {
-  const dispatch = useDispatch();
 
   const ingredients = useSelector(selectAll);
   const { id } = useParams()

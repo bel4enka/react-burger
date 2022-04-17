@@ -1,13 +1,14 @@
 import styles from './orders-list.module.css'
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {RootStateOrAny, useSelector} from "react-redux";
-import {statusOrder} from "../../utils/utils";
+import {createData, statusOrder} from "../../utils/utils";
 import { ImageListItem} from "../images-list/images-list";
 import {selectAll} from "../../services/slice/ingredients-slice";
 import { Link, useLocation } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 
-export const OrdersList = ({order, idIngredients}) => {
+export const OrdersList = ({order, idIngredients, page}) => {
   const ingredients = useSelector(selectAll);
   const location = useLocation();
 
@@ -40,13 +41,15 @@ export const OrdersList = ({order, idIngredients}) => {
   const price = searchIngredientsPrice(idIngredients).reduce((acc, price) => acc + price, 0)
   return (
     <>
-      <Link className={styles.item} to={{ pathname: `/feed/${order._id}`, state: { background: location } }}>
+      <Link className={styles.item} to={{ pathname: `/${page}/${order._id}`, state: { background: location } }}>
         <div className={styles.item_header}>
           <span className={`${styles.item_id} text_type_digits-default`}>#{order.number}</span>
-          <time className={`${styles.item_date} text text_color_inactive text_type_main-default`}>{order.createdAt}</time>
+          <time className={`${styles.item_date} text text_color_inactive text_type_main-default`}>{createData(order.createdAt)}</time>
         </div>
         <h2 className={'text text_type_main-medium'}>{order.name}</h2>
-        <span className={'text text_type_main-small'}>{statusOrder(order.status)}</span>
+        {location.pathname.startsWith('/profile') &&
+          <span className={'text text_type_main-small'}>{statusOrder(order.status)}</span>
+        }
         <div className={styles.item_desc}>
           <ul className={styles.desc_images}>
               <ImageListItem ingredientsImages={searchIngredientsImages(idIngredients)} />
@@ -61,5 +64,14 @@ export const OrdersList = ({order, idIngredients}) => {
     </>
   )
 }
-
-
+OrdersList.propTypes ={
+  order: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
+    number: PropTypes.number.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+  }),
+  idIngredients: PropTypes.array,
+  page: PropTypes.string.isRequired,
+}

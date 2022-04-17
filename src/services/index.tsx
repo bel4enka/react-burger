@@ -14,7 +14,7 @@ import {wsActions} from "./actions/wsActions";
 
 const store = configureStore({
     reducer: {ingredients, auth, constructors, webSocket },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(socketMiddleware(wsUrl, wsActions )),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(socketMiddleware(wsActions )),
   devTools: process.env.NODE_ENV !== 'production',
 })
 

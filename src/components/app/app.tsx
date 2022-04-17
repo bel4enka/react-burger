@@ -4,7 +4,7 @@ import styles from './app.module.css'
 import { fetchIngredients} from "../../services/slice/ingredients-slice";
 import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
-import { Login, Home, Register, ForgotPassword, ResetPassword, IngredientsPage, Profile, NotFound404, Feed, FeedItemPage, Orders, OrderItem } from '../../pages'
+import { Login, Home, Register, ForgotPassword, ResetPassword,  Profile, NotFound404, Feed, Orders, OrderItem } from '../../pages'
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import {ProtectedRoute} from "../protected-route/protected-route";
@@ -66,6 +66,11 @@ function App() {
               <OrderItem/>
             }
           </Route>
+          {!modal &&
+            <Route exact={true} path="/profile/orders/:id">
+              <OrderItem/>
+            </Route>
+          }
 
           <Route exact={true} path="/register">
             <Register/>
@@ -91,15 +96,9 @@ function App() {
             <Feed/>
           </Route>
 
-
-
           <ProtectedRoute exact={true} path="/profile/orders">
             <Orders/>
           </ProtectedRoute>
-
-          <Route exact={true} path="/profile/orders/:id">
-            <OrderItem/>
-          </Route>
 
           <Route>
             <NotFound404 />
@@ -116,11 +115,17 @@ function App() {
           </Route>
 
 
-          <Route path='/feed/:id' >
+          <Route path='/profile/orders/:id' >
             <Modal onClose={toggleModal} title={'Детали заказа'}>
               <OrderItem/>
             </Modal>
           </Route>
+
+            <Route path='/feed/:id' >
+              <Modal onClose={toggleModal} title={'Детали заказа'}>
+                <OrderItem/>
+              </Modal>
+            </Route>
           </Switch>
         }
       </main>
