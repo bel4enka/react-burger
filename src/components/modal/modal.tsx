@@ -34,7 +34,10 @@ function Modal(props) {
             </span>
           </div>
           <div className={styles.modal__content}>
-            {children}
+            {children &&
+              children
+            }
+
           </div>
         </div>
       </div>

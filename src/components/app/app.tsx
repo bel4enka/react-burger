@@ -127,11 +127,11 @@ function App() {
           </Route>
 
 
-          <Route path='/profile/orders/:id' >
+          <ProtectedRoute path='/profile/orders/:id' >
             <Modal onClose={toggleModal} title={'Детали заказа'}>
               <OrderItem/>
             </Modal>
-          </Route>
+          </ProtectedRoute>
 
             <Route path='/feed/:id' >
               <Modal onClose={toggleModal} title={'Детали заказа'}>

@@ -1,17 +1,7 @@
 import styles from "../orders-list/orders-list.module.css";
-import {nanoid} from "@reduxjs/toolkit";
 
 
 export const ImageListItem = ({ingredientsImages}) => {
-
-  // const ingredientsImagesSmall = (ingredientsImages) => {
-  //   if (ingredientsImages.length > 5) {
-  //    return  ingredientsImages.slice(0, 5)
-  //   }
-  //   else {
-  //     return ingredientsImages
-  //   }
-  // }
 
   return (
     <>
@@ -25,7 +15,9 @@ export const ImageListItem = ({ingredientsImages}) => {
           return (
             <li key={i} className={`${styles.images} ${styles.last_images}`}>
               <img className={`${styles.img} ${styles.last_img}`} src={item} alt={'ингредиент'}/>
-              <span className={`${styles.over} text_type_digits-default`}> +{ingredientsImages.length - 6} </span>
+              {ingredientsImages.length - 6 === 0?null:
+                <span className={`${styles.over} text_type_digits-default`}>{`+${ingredientsImages.length - 6}`}</span>
+              }
             </li>)
         }
       })}

@@ -55,7 +55,8 @@ export const OrdersList = ({order, idIngredients, page}) => {
               <ImageListItem ingredientsImages={searchIngredientsImages(idIngredients)} />
           </ul>
           <div className={styles.price}>
-            <span className={'text_type_digits-default'}>{price}</span>
+            {price &&
+            <span className={'text_type_digits-default'}>{price}</span>}
             <CurrencyIcon type="primary" />
           </div>
         </div>

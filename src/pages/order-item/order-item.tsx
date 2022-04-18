@@ -20,20 +20,19 @@ export const OrderItem = () => {
   const refreshToken = localStorage.getItem('refreshToken');
   const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
 
+  useWebSocket()
   useEffect(() => {
     if(refreshToken) {
-    dispatch(getUser())
-    // @ts-ignore
-    if(!loggedIn) {
-      dispatch(fetchUpdateToken())
-      // @ts-ignore
       dispatch(getUser())
+      // @ts-ignore
+      if(!loggedIn) {
+        dispatch(fetchUpdateToken())
+        // @ts-ignore
+        dispatch(getUser())
+      }
     }
-  }
 
-}, []);
-
-  useWebSocket()
+  }, []);
   const { id } = useParams()
 
   const {feedsOrders} = useSelector((state:RootStateOrAny) => state.webSocket);
@@ -74,54 +73,56 @@ export const OrderItem = () => {
   const newIngredient = useOrderIngredients(order)
 
   return (
-  <>
-    {order &&
+<>
+        <div className={styles.wrap}>
+          {order &&
+          <>
+            <section className={`${styles.header} mb-15`}>
 
-      <div className={styles.wrap}>
-        <section className={`${styles.header} mb-15`}>
+              <h2
+                className={`${styles.header_title} text_type_digits-default mb-10`}>
+                #{order.number}</h2>
+              <h2
+                className={'text text_type_main-medium mb-3'}>{order.name}</h2>
 
-          <h2
-            className={`${styles.header_title} text_type_digits-default mb-10`}>
-            #{order.number}</h2>
-          <h2 className={'text text_type_main-medium mb-3'}>{order.name}</h2>
+              <span className={'text text_type_main-small '}>
+                      {statusOrder(order.status)}</span>
+            </section>
+            <section className={styles.body}>
+              <h2 className={'text text_type_main-medium mb-6'}>Состав:</h2>
+              <ul className={styles.ingredients_list}>
+                {newIngredient.newIngredients.map((item,i) => (
+                  <li key={i} className={styles.ingredient_item}>
+                    <img className={styles.ingredient_img} alt={'ингредиент'}
+                         src={item.ingredient.image}/>
+                    <h3
+                      className={`${styles.ingredient_title} text text_type_main-default`}>{item.ingredient.name}</h3>
+                    <span
+                      className={`${styles.count} text_type_digits-default`}>{item.count} X {item.ingredient.price}
+                      <CurrencyIcon type="primary"/>
+                              </span>
+                  </li>)
+                )}
+              </ul>
+            </section>
+            <section className={styles.footer}>
+              <time
+                // @ts-ignore
+                className={`${styles.footer_date} text text_color_inactive text_type_main-default`}>{createData(order.createdAt)}
+              </time>
+              <div className={styles.footer_price}>
+                <span
+                  className={'text_type_digits-default'}>{newIngredient.total}</span>
+                <CurrencyIcon type="primary"/>
+              </div>
+            </section>
+          </>
+          }
+        </div>
 
-          <span className={'text text_type_main-small '}>
-            {statusOrder(order.status)}</span>
-        </section>
-
-        <section className={styles.body}>
-          <h2 className={'text text_type_main-medium mb-6'}>Состав:</h2>
-          <ul className={styles.ingredients_list}>
-            {newIngredient.newIngredients.map(item =>
-                    (<li key={nanoid()} className={styles.ingredient_item}>
-                      <img className={styles.ingredient_img} alt={'ингредиент'}
-                           src={item.ingredient.image}/>
-                        <h3
-                        className={`${styles.ingredient_title} text text_type_main-default`}>{item.ingredient.name}</h3>
-                      <span className={`${styles.count} text_type_digits-default`}>{item.count} X {item.ingredient.price}
-                        <CurrencyIcon type="primary"/>
-                      </span>
-                    </li>)
-                  )
-            }
-          </ul>
-        </section>
-
-        <section className={styles.footer}>
-          <time
-            // @ts-ignore
-            className={`${styles.footer_date} text text_color_inactive text_type_main-default`}>{createData(order.createdAt)}
-          </time>
-          <div className={styles.footer_price}>
-            <span className={'text_type_digits-default'}>{newIngredient.total}</span>
-            <CurrencyIcon type="primary"/>
-          </div>
-        </section>
-
-      </div>
-       }
-    </>
+</>
   )
+
 }
 
 
