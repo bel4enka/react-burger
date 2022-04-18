@@ -79,9 +79,9 @@ function App() {
             }
           </Route>
           {!modal &&
-            <Route exact={true} path="/profile/orders/:id">
+            <ProtectedRoute exact={true} path="/profile/orders/:id">
               <OrderItem/>
-            </Route>
+            </ProtectedRoute>
           }
 
           <Route exact={true} path="/register">
