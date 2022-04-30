@@ -1,4 +1,5 @@
 export const baseUrl = 'https://norma.nomoreparties.space/api/'
+export const wsUrl = 'wss://norma.nomoreparties.space/orders'
 
 export function getCookie(name) {
   const matches = document.cookie.match(
@@ -32,4 +33,35 @@ export function setCookie(name, value, props) {
 
 export function deleteCookie(name) {
   setCookie(name, null, { expires: -1 });
+}
+
+export function statusOrder (status) {
+  switch (status) {
+    case 'done':
+      return 'Выполнен'
+    case 'pending':
+      return 'Готовится';
+    case 'created':
+      return 'Создан';
+    default:
+      return status;
+  }
+}
+
+export const createData = (date) => {
+  const currentDate = new Date();
+  const formattedDate = new Date(date);
+  const differenceData = currentDate.getTime() - formattedDate.getTime();
+  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+  let resDay = '';
+  if (differenceData < oneDay)
+    resDay = 'Сегодня'
+  else if (differenceData < oneDay * 2)
+    resDay = 'Вчера'
+  else
+    resDay = `${Math.trunc(differenceData / oneDay)} дня назад`;
+
+  resDay += `, ${formattedDate.toLocaleDateString(undefined, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }).substring(12)}`;
+  return resDay;
 }

@@ -3,6 +3,7 @@ import styles from './ingredient.module.css';
 import { useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import {selectAll} from "../../services/slice/ingredients-slice";
+
 export const IngredientsPage = () => {
 
   const { id } = useParams();

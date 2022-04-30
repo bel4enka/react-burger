@@ -3,7 +3,7 @@ import {
   nanoid, createAsyncThunk,
 } from "@reduxjs/toolkit";
 import {useHttp} from "../../hooks/http.hook";
-import {baseUrl} from "../../utils/utils";
+import {baseUrl, getCookie} from "../../utils/utils";
 
 const initialState = {
   constructor: [],
@@ -17,8 +17,14 @@ const initialState = {
 export const fetchOrder = createAsyncThunk(
   'constructor/fetchOrder',
   async (ingredients) => {
+    const accessToken = getCookie('accessToken');
     const {request} = useHttp();
-    return await request(`${baseUrl}orders`,'POST', JSON.stringify({ingredients}));
+    return await request(`${baseUrl}orders`,'POST', JSON.stringify({ingredients}),
+      {
+        // @ts-ignore
+        'Content-Type': 'application/json',  'Authorization': accessToken,
+      }
+    );
   }
 );
 

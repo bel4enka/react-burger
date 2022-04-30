@@ -6,6 +6,9 @@ import {ResetPassword} from "./reset-password/reset-password";
 import {Profile} from "./profile/profile";
 import {NotFound404} from "./not-found/not-found-404";
 import {IngredientsPage} from './ingredient/ingredient'
+import {Feed} from "./feed/feed";
+import {Orders} from './orders/orders'
+import {OrderItem} from "./order-item/order-item"
 
 export {
   Login,
@@ -15,5 +18,8 @@ export {
   ResetPassword,
   Profile,
   NotFound404,
-  IngredientsPage
+  IngredientsPage,
+  Feed,
+  Orders,
+  OrderItem
 }

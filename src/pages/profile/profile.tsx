@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
-import { NavLink } from "react-router-dom";
 import {useSelector, useDispatch, RootStateOrAny} from 'react-redux';
 import styles from './profile.module.css'
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -10,6 +9,7 @@ import {
   dellProfileSuccess,
   fetchUpdateToken, setProfileErr
 } from "../../services/slice/auth-sclice";
+import {ProfileMenu} from "../../components/profile-menu/profile-menu";
 
 export const Profile = () => {
   const [input, setInput] = useState({
@@ -54,9 +54,7 @@ export const Profile = () => {
     }
   }, [updateProfileErr])
 
-  const handleLogOut = () => {
-    dispatch(logOut())
-  }
+
 
   useEffect(() => {
     if(updateProfileErr) {
@@ -76,43 +74,7 @@ export const Profile = () => {
 
    return (
     <div className={styles.wrap}>
-      <section className={styles.menu}>
-        <ul className={styles.nav}>
-          <li className={'mb-10'}>
-            <NavLink
-              to="/profile" exact={true}
-              className={`${styles.nav__link} text text_type_main-medium text_color_inactive`}
-              activeClassName={styles.nav__link_type_active}>
-              Профиль
-            </NavLink>
-          </li>
-
-          <li className={'mb-10'}>
-            <NavLink
-              exact={true}
-              className={`${styles.nav__link} text text_type_main-medium text_color_inactive`}
-              activeClassName={styles.nav__link_type_active}
-              to="/profile/orders" >
-              История заказов
-            </NavLink>
-          </li>
-
-          <li className={'mb-10'}>
-            <NavLink
-              exact={true}
-              className={`${styles.nav__link} text text_type_main-medium text_color_inactive`}
-              activeClassName={styles.nav__link_type_active}
-              to="/login"
-              onClick={handleLogOut}
-            >
-              Выход
-            </NavLink>
-          </li>
-        </ul>
-        <span className={'text text_type_main-default text_color_inactive'}>
-          В этом разделе вы можете
-  изменить свои персональные данные</span>
-      </section>
+      <ProfileMenu/>
       <section className={styles.content}>
         <form className={`${styles.form} input_size_default`} onSubmit={handleSubmit}>
             <Input

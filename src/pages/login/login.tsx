@@ -1,5 +1,5 @@
 import styles from '../registr/register.module.css'
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
 import {
@@ -7,7 +7,11 @@ import {
   useSelector,
   RootStateOrAny
 } from "react-redux";
-import {fetchLogin} from "../../services/slice/auth-sclice";
+import {
+  fetchLogin,
+  fetchUpdateToken,
+  getUser
+} from "../../services/slice/auth-sclice";
 import { Redirect, useLocation } from 'react-router-dom';
 
 export const Login = () => {
@@ -29,7 +33,19 @@ export const Login = () => {
     // @ts-ignore
     dispatch(fetchLogin(input))
   }
-
+  const refreshToken = localStorage.getItem('refreshToken');
+// useEffect(() => {
+//     if(refreshToken) {
+//       dispatch(getUser())
+//       // @ts-ignore
+//       if(!loggedIn) {
+//         dispatch(fetchUpdateToken())
+//         // @ts-ignore
+//         dispatch(getUser())
+//       }
+//     }
+//
+//   }, []);
   if (loggedIn) {
     return <Redirect
       to={location?.state?.from || '/' }

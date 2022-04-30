@@ -17,7 +17,7 @@ import BurgerConstructorItem
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const {bun, constructor, order} = useSelector((state:RootStateOrAny) => state.constructors);
+  const {bun, constructor, order, loading} = useSelector((state:RootStateOrAny) => state.constructors);
   const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
   const history = useHistory();
 
@@ -103,7 +103,7 @@ const BurgerConstructor = () => {
                 onClick={() => {sendOrder()}}
                 disabled={(bun.length === 0 || !constructor)}
               >
-              <span className="text text_type_main-default disabled">Оформить заказ</span>
+              <span className="text text_type_main-default disabled">{loading?'Заказ оформляется... подождите':'Оформить заказ'}</span>
               </Button>
               </div>
 

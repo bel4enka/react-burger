@@ -1,0 +1,16 @@
+.orders_list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 80vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
