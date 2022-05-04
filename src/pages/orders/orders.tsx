@@ -1,26 +1,24 @@
 import {OrdersList} from "../../components/orders-list/orders-list";
 import {ProfileMenu} from "../../components/profile-menu/profile-menu";
 import styles from "./orders.module.css";
-import {RootStateOrAny, useSelector} from "react-redux";
-import React from "react";
-
+import React, {FC} from "react";
 import {useWebSocket} from "../../hooks/webSoket.hook";
+import {useAppSelector} from "../../hooks/store";
 
 
-export const Orders = () => {
+export const Orders:FC = () => {
 
   useWebSocket()
   const page = 'profile/orders'
-  const {feedsOrders, feed} = useSelector((state:RootStateOrAny) => state.webSocket);
+  const {feedsOrders} = useAppSelector(state => state.webSocket);
 
   return (
     <>
       <div className={styles.wrap}>
         <ProfileMenu/>
         <section className={styles.orders_list}>
-          {feedsOrders &&
+          {feedsOrders.length &&
             feedsOrders.map((item:any) => (
-              // @ts-ignore
               <OrdersList key={item._id} order={item} idIngredients={item.ingredients} page={page}/>
             ))
           }

@@ -2,27 +2,30 @@ import styles from '../registr/register.module.css'
 import React, { useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect } from 'react-router-dom';
-import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
 import {fetchUpdatePassword} from "../../services/slice/auth-sclice";
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
+import {IInputPassword} from "../../services/types/data";
 
 export const ResetPassword = () => {
 
-  const {loggedIn, forgotPasswordOk, resetPasswordOk} = useSelector((state:RootStateOrAny) => state.auth);
+  const {loggedIn, forgotPasswordOk, resetPasswordOk} = useAppSelector(state => state.auth);
 
-  const dispatch = useDispatch();
-  const [input, setInput] = useState({
+  const dispatch = useAppDispatch()
+
+
+  const [input, setInput] = useState<IInputPassword>({
     password: '',
     token: ''
   })
 
-  const onChange = (e) => {
+  const onChange = (e: { target: { name: string; value: string; }; }) => {
     setInput({...input, [e.target.name]: e.target.value})
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault()
-    // @ts-ignore
     dispatch(fetchUpdatePassword(input))
+
   }
 
   if(loggedIn) {

@@ -1,8 +1,7 @@
-import React, {useEffect, useState, useReducer, useMemo} from 'react';
+import React, {useEffect} from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
 import { fetchIngredients} from "../../services/slice/ingredients-slice";
-import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
 import {
   Login,
@@ -24,33 +23,30 @@ import {
   fetchUpdateToken,
   getUser
 } from "../../services/slice/auth-sclice";
-
-
+import {useAppDispatch, useAppSelector} from "../../hooks/store"
+import {TLocationState} from "../../services/types/data";
 
 function App() {
 
   const history = useHistory();
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const location = useLocation<TLocationState>();
+  const dispatch = useAppDispatch();
   const background = location.state && location.state.background;
 
   const modal = (window.history.state != null) ? (window.history.state.modal || false) : false;
   const refreshToken = localStorage.getItem('refreshToken');
-  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const {loggedIn} = useAppSelector(state => state.auth)
 
   useEffect(() => {
     dispatch(fetchIngredients())
 
     if(refreshToken) {
       dispatch(getUser())
-      // @ts-ignore
       if(!loggedIn) {
         dispatch(fetchUpdateToken())
-        // @ts-ignore
         dispatch(getUser())
       }
     }
-
   }, []);
 
   const toggleModal = () => {

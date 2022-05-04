@@ -1,6 +1,9 @@
-export const socketMiddleware = ( wsActions) => {
+import {IWsActions} from "../types/data";
+import {Middleware} from "redux";
+
+export const socketMiddleware = ( wsActions: IWsActions): Middleware => {
   return store => {
-    let socket = null;
+    let socket: WebSocket | null = null;
 
     return next => (action) => {
       const { dispatch } = store;
@@ -14,7 +17,7 @@ export const socketMiddleware = ( wsActions) => {
       if (socket) {
         socket.onopen = event => {
           console.log("Соединение установлено")
-          dispatch(wsOpen());
+          dispatch(wsOpen(null));
         };
         // функция, которая вызывается при получении события от сервера
         socket.onmessage = event => {
@@ -24,7 +27,7 @@ export const socketMiddleware = ( wsActions) => {
         };
 
         socket.onerror = event => {
-          dispatch(wsError());
+          dispatch(wsError(null));
         };
 
         socket.onclose = event => {

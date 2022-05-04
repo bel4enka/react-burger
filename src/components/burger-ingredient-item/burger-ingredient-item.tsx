@@ -1,21 +1,27 @@
-import React from "react";
+import React, {FC} from "react";
 import styles from './burger-ingredient-item.module.css'
 import {
   Counter,
   CurrencyIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
-import {RootStateOrAny, useSelector} from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
+import {TIngredient} from "../../services/types/data";
+import {useAppSelector} from "../../hooks/store";
+import {TLocationState} from "../../services/types/data";
 
+type TIngredientProps = {
+  readonly item: TIngredient;
+}
 
-function BurgerIngredientItem ({item}) {
-  const constructors = useSelector((state:RootStateOrAny) => state.constructors);
+const BurgerIngredientItem: FC<TIngredientProps> = ({item}) => {
+
+  const constructors = useAppSelector(state => state.constructors);
   const countBunConstructor = constructors.bun.filter((i) => i._id === item._id).length
   const countIngredientConstructor = constructors.constructor.filter((i) => i._id === item._id).length
-  const location = useLocation();
+  const location = useLocation<TLocationState>();
   const {image, price, name } = item;
+
   const [{ isDrag }, dragRef] = useDrag({
     type: "ingredients",
     item: item,
@@ -39,14 +45,6 @@ function BurgerIngredientItem ({item}) {
     </Link>
     )
   )
-}
-BurgerIngredientItem.propTypes ={
-  item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired
-  }),
-  handler: PropTypes.any
 }
 
 export default BurgerIngredientItem

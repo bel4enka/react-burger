@@ -1,11 +1,11 @@
 import styles from "../../pages/profile/profile.module.css";
-import React from "react";
+import React, {FC} from "react";
 import { NavLink } from "react-router-dom";
 import {logOut} from "../../services/slice/auth-sclice";
-import { useDispatch} from 'react-redux';
+import {useAppDispatch} from "../../hooks/store";
 
-export const ProfileMenu = () => {
-  const dispatch = useDispatch();
+export const ProfileMenu:FC = () => {
+  const dispatch = useAppDispatch();
 
   const handleLogOut = () => {
     dispatch(logOut())

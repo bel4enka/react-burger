@@ -1,29 +1,29 @@
 import styles from '../registr/register.module.css'
-import React, {useRef, useState} from 'react';
-import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
+import React, {FC, useState} from 'react';
+import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect } from 'react-router-dom';
-import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import {fetchForgotPassword} from "../../services/slice/auth-sclice";
+import {IInputForgotPassword} from "../../services/types/data";
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
 
 
-export const ForgotPassword = () => {
+export const ForgotPassword: FC = () => {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const {forgotPasswordOk, loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const {forgotPasswordOk, loggedIn} = useAppSelector(state => state.auth);
 
-  const [input, setInput] = useState({
+  const [input, setInput] = useState<IInputForgotPassword>({
     email: ''
   })
 
-  const onChange = (e) => {
+  const onChange = (e: { target: { name: string; value: string; }; }) => {
     setInput({...input, [e.target.name]: e.target.value})
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault()
-    // @ts-ignore
-    dispatch(fetchForgotPassword(input.email))
+    dispatch(fetchForgotPassword(input))
   }
   if(forgotPasswordOk) {
     return (

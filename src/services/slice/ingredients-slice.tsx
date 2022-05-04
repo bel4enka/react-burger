@@ -1,16 +1,22 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 import {useHttp} from '../../hooks/http.hook';
 import {baseUrl} from "../../utils/utils";
-const ingredientsAdapter = createEntityAdapter({
-  // @ts-ignore
-  selectId: (ingredient) => ingredient._id,
-});
+import {TIngredient} from "../types/data"
 
-const initialState = ingredientsAdapter.getInitialState({
+
+interface IIngredientsState {
+  ingredients: TIngredient[],
+  ingredient: null,
+  loading: boolean,
+  error: boolean,
+}
+
+const initialState: IIngredientsState = {
+  ingredients: [],
   ingredient: null,
   loading: false,
   error: null,
-});
+};
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
@@ -34,11 +40,12 @@ export const ingredientsSlice = createSlice({
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.loading = false;
         state.error = false;
-        ingredientsAdapter.setAll(state, action.payload.data);
+        state.ingredients = action.payload.data;
       })
       .addCase(fetchIngredients.rejected, state => {
         state.loading = false;
-        state.error = 'Не могу получить данные ингредиентов';
+
+        // state.error = 'Не могу получить данные ингредиентов';
       })
       .addDefaultCase(() => {})
   }
@@ -47,9 +54,6 @@ export const ingredientsSlice = createSlice({
 const {actions, reducer} = ingredientsSlice;
 
 export default reducer;
-
-// @ts-ignore
-export const {selectAll} = ingredientsAdapter.getSelectors(state => state.ingredients);
 
 export const {
   ingredientModal

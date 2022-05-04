@@ -1,14 +1,14 @@
 export const baseUrl = 'https://norma.nomoreparties.space/api/'
 export const wsUrl = 'wss://norma.nomoreparties.space/orders'
 
-export function getCookie(name) {
+export function getCookie(name:string) {
   const matches = document.cookie.match(
     new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)')
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-export function setCookie(name, value, props) {
+export function setCookie(name: string, value: string, props: any = false) {
   props = props || {};
   let exp = props.expires;
   if (typeof exp == 'number' && exp) {
@@ -31,11 +31,11 @@ export function setCookie(name, value, props) {
   document.cookie = updatedCookie;
 }
 
-export function deleteCookie(name) {
+export function deleteCookie(name:string) {
   setCookie(name, null, { expires: -1 });
 }
 
-export function statusOrder (status) {
+export function statusOrder (status:string) {
   switch (status) {
     case 'done':
       return 'Выполнен'
@@ -48,7 +48,7 @@ export function statusOrder (status) {
   }
 }
 
-export const createData = (date) => {
+export const createData = (date:string) => {
   const currentDate = new Date();
   const formattedDate = new Date(date);
   const differenceData = currentDate.getTime() - formattedDate.getTime();

@@ -1,9 +1,9 @@
-import React from "react";
+import React, {FC} from "react";
 import iconOk from '../../images/iconOk.png'
-import {RootStateOrAny, useSelector} from "react-redux";
+import {useAppSelector} from "../../hooks/store";
 
-function OrderDetails() {
-  const {order} = useSelector((state:RootStateOrAny) => state.constructors);
+const OrderDetails:FC = () => {
+  const {order} = useAppSelector(state => state.constructors);
   return(
     <>
       <div className={`text text_type_digits-large`}>{order.order.number}</div>

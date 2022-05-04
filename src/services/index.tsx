@@ -10,11 +10,9 @@ import webSocket from "./slice/websocket-slice";
 import {wsActions} from "./actions/wsActions";
 
 
-
-
-const store = configureStore({
+ const store = configureStore({
     reducer: {ingredients, auth, constructors, webSocket },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(socketMiddleware(wsActions )),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(socketMiddleware(wsActions)),
   devTools: process.env.NODE_ENV !== 'production',
 })
 

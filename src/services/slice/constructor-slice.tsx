@@ -1,27 +1,33 @@
 import {
   createSlice,
-  nanoid, createAsyncThunk,
+  nanoid, createAsyncThunk, PayloadAction,
 } from "@reduxjs/toolkit";
 import {useHttp} from "../../hooks/http.hook";
 import {baseUrl, getCookie} from "../../utils/utils";
+import {TIngredient, TOrder} from "../types/data"
 
-const initialState = {
+interface IConstructorState {
+  constructor: TIngredient[],
+  bun: TIngredient[] ,
+  loading: boolean,
+  error: boolean,
+  order: TOrder,
+}
+const initialState:IConstructorState = {
   constructor: [],
   bun: [],
-  orderLoadingStatus: null,
   loading: false,
-  error: null,
+  error: false,
   order: null,
 };
 
 export const fetchOrder = createAsyncThunk(
   'constructor/fetchOrder',
-  async (ingredients) => {
-    const accessToken = getCookie('accessToken');
+  async (ingredients:TIngredient[]) => {
+    const accessToken:string = getCookie('accessToken');
     const {request} = useHttp();
     return await request(`${baseUrl}orders`,'POST', JSON.stringify({ingredients}),
       {
-        // @ts-ignore
         'Content-Type': 'application/json',  'Authorization': accessToken,
       }
     );
@@ -33,9 +39,9 @@ export const constructorSlice = createSlice({
   initialState,
   reducers: {
     setConstructor: {
-      reducer: (state, action) => {
-        state.constructor.push(action.payload) ;
-      },// @ts-ignore
+      reducer: (state, action: PayloadAction<TIngredient>) => {
+        state.constructor.push(action.payload)
+      },
       prepare: (item) => {
         const id:string = nanoid()
         return { payload: {id, ...item} }
@@ -68,11 +74,10 @@ export const constructorSlice = createSlice({
         state.bun = [];
         state.constructor = [];
         state.order = action.payload;
-
       })
       .addCase(fetchOrder.rejected, state => {
         state.loading = false;
-        state.error = 'Не могу отправить заказ - ошибка';
+        // state.error = 'Не могу отправить заказ - ошибка';
       })
       .addDefaultCase(() => {})
   }

@@ -1,11 +1,10 @@
-import React from "react";
+import React, {FC} from "react";
 import styles from './burger-constructor.module.css'
 import {
   setConstructor,
   setBun,
   fetchOrder, removeOrderModal
 } from "../../services/slice/constructor-slice";
-import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
 import { Button, ConstructorElement} from "@ya.praktikum/react-developer-burger-ui-components";
 import TotalSum from "../total-sum/total-sum";
 import Modal from "../modal/modal";
@@ -14,12 +13,14 @@ import { useHistory } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 import BurgerConstructorItem
   from "../burger-constructor-item/burger-constructor-item";
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
+import {TIngredient, TLocationState} from "../../services/types/data";
 
-const BurgerConstructor = () => {
-  const dispatch = useDispatch();
-  const {bun, constructor, order, loading} = useSelector((state:RootStateOrAny) => state.constructors);
-  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
-  const history = useHistory();
+const BurgerConstructor: FC = () => {
+  const dispatch = useAppDispatch();
+  const {bun, constructor, order, loading} = useAppSelector(state => state.constructors);
+  const {loggedIn} = useAppSelector(state => state.auth);
+  const history = useHistory<TLocationState>();
 
   const toggleModal = () =>{
     dispatch(removeOrderModal(null))
@@ -30,15 +31,14 @@ const BurgerConstructor = () => {
       return;
     }
     else {
-      const ingredients = bun.concat(constructor).map(e => e._id)
-      // @ts-ignore
+      const ingredients = bun.concat(constructor)
       dispatch(fetchOrder(ingredients))
     }
   }
 
   const [{isHover}, drop] = useDrop({
     accept: 'ingredients',
-    drop: (item) => {
+    drop: (item: TIngredient) => {
       onDrop(item);
     },
     collect: monitor => ({
@@ -46,12 +46,10 @@ const BurgerConstructor = () => {
     }),
   });
   const border = isHover ? '1px lightgreen solid' : 'none';
-  const onDrop = (item) => {
-    // @ts-ignore
+  const onDrop = (item:TIngredient) => {
     item.type === 'bun' ? dispatch(setBun(item)) : dispatch(setConstructor(item))
   }
-  const bunFirstElement = bun[0];
-  // @ts-ignore
+
   return (
       <section className={`${styles.cart} mt-25`} ref={drop} style={{border}}>
         {order &&
@@ -62,22 +60,21 @@ const BurgerConstructor = () => {
         }
 
           <div className={styles.cart__top}>
-            {bun.length?
+            { bun.length>0 ?
               <ConstructorElement
                 type="top"
                 isLocked={true}
-                text={bunFirstElement.name + ' (верх)'}
-                price={bunFirstElement.price}
-                thumbnail={bunFirstElement.image}
+                text={bun[0].name + ' (верх)'}
+                price={bun[0].price}
+                thumbnail={bun[0].image}
               />: null
             }
           </div>
-            {constructor.length || bun.length ?
+            {constructor.length>0 || bun.length>0 ?
               <ul className={`${styles.carts__items} custom-scroll mt-4 mb-4`}>
 
                 {constructor.map((item, index) => item.type !== 'bun' && (
-                  // @ts-ignore
-                      <BurgerConstructorItem key={item.id} item={item} isLocked={false} id={item._id} index={index} constructor={constructor}/>
+                      <BurgerConstructorItem key={item.id} item={item} isLocked={false} index={index} />
                   )
                 )}
               </ul>:
@@ -85,13 +82,13 @@ const BurgerConstructor = () => {
             }
           <div className={styles.cart__bottom}>
 
-            {bun.length?
+            {bun.length>0?
               <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text={bunFirstElement.name + ' (низ)'}
-                price={bunFirstElement.price}
-                thumbnail={bunFirstElement.image}
+                text={bun[0].name + ' (низ)'}
+                price={bun[0].price}
+                thumbnail={bun[0].image}
               />: null
             }
           </div>

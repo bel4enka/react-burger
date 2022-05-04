@@ -1,15 +1,15 @@
 import {useEffect} from "react";
 import { useLocation } from 'react-router-dom';
-import {useDispatch} from "react-redux";
 import {
   closedWSConnection,
   startWSConnection
 } from "../services/slice/websocket-slice";
 import {getCookie, wsUrl} from "../utils/utils";
+import {useAppDispatch} from "./store";
 
 export const useWebSocket = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (location.pathname.startsWith('/feed')) {

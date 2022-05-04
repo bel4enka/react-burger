@@ -1,9 +1,17 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {TIngredient, TOrder} from "../types/data";
 
-const initialState = {
+interface IWebSocketState {
+  connect: boolean,
+  errorWS: boolean,
+  feedsOrders: TOrder[],
+  feed: {total: string, totalToday: string} | null,
+}
+
+const initialState:IWebSocketState = {
   connect: false,
   errorWS: false,
-  feedsOrders: null,
+  feedsOrders: [],
   feed: null,
 }
 
