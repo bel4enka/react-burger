@@ -1,7 +1,8 @@
 import { webSocketSlice } from "../slice/websocket-slice";
+import {IWsActions} from "../types/data";
 
 
-export const wsActions = {
+export const wsActions:IWsActions = {
   wsInit: 'webSocket/startWSConnection',
   wsSendMessage: 'webSocket/sendMessage',
   wsMessage: webSocketSlice.actions.getWSMessage,

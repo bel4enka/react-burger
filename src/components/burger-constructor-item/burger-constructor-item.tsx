@@ -1,39 +1,45 @@
 import styles from './burger-constructor-item.module.css'
-import {useDispatch} from "react-redux";
-import React, {useRef} from "react";
-import PropTypes from "prop-types";
+import React, {FC, useRef} from "react";
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDrag, useDrop } from 'react-dnd';
+import {
+  DropTargetMonitor,
+  useDrag,
+  useDrop
+} from 'react-dnd';
 import {moveIngredient, deleteIngredient} from "../../services/slice/constructor-slice";
+import {useAppDispatch} from "../../hooks/store";
+import {TIngredient} from "../../services/types/data";
 
+interface IBurgerConstructorItemProps {
+  item: TIngredient,
+  type?: 'top' | 'bottom',
+  isLocked: boolean,
+  index: number
+}
 
-const BurgerConstructorItem = ({ item, type, isLocked, index}) => {
+const BurgerConstructorItem:FC<IBurgerConstructorItemProps> = ({ item, isLocked, index}) => {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef(null);
-  const [{ isDragging }, dragRef] = useDrag({
+
+  const [{isDragging} , drag] = useDrag({
     type: "constructor",
     item: () => {
       return { item, index }
     },
-    collect: (monitor: any) => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-  const [{ handlerId }, dropRef] = useDrop({
-    accept: "constructor",
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      }
-    },
-    hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      // @ts-ignore
+
+  const [{ handlerId }, drop] = useDrop({
+    accept: 'constructor',
+    collect: (monitor) => ({
+      handlerId: monitor.getHandlerId()
+    }),
+    hover: (item: {index: number}, monitor: DropTargetMonitor) => {
+      if(!ref.current) return;
       const dragIndex = item.index;
-      // @ts-ignore
       const hoverIndex = index;
       if (dragIndex === hoverIndex) {
         return;
@@ -49,16 +55,14 @@ const BurgerConstructorItem = ({ item, type, isLocked, index}) => {
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
-      // @ts-ignore
       dispatch(moveIngredient({drag: dragIndex, hover: hoverIndex }))
-      //@ts-ignore
       item.index = hoverIndex;
     },
   });
 
-  const opacity = isDragging ? 0.2 : 1;
+  const opacity = isDragging ? 0.7 : 1;
 
-  dragRef(dropRef(ref));
+  drag(drop(ref));
 
   return (
     <li className={styles.cart__item} ref={ref} draggable style={{ opacity }} data-handler-id={handlerId}>
@@ -67,7 +71,6 @@ const BurgerConstructorItem = ({ item, type, isLocked, index}) => {
       </span>
       <ConstructorElement
         isLocked={isLocked}
-        type={type}
         text={item.name}
         price={item.price}
         thumbnail={item.image}
@@ -78,14 +81,3 @@ const BurgerConstructorItem = ({ item, type, isLocked, index}) => {
 }
 
 export default BurgerConstructorItem
-
-BurgerConstructorItem.propTypes ={
-  item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-  }),
-  type: PropTypes.string,
-  isLocked: PropTypes.bool.isRequired,
-  index: PropTypes.number
-}

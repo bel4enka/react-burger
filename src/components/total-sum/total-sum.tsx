@@ -1,16 +1,16 @@
-import React from "react";
+import React, {FC} from "react";
 import styles from './total-sum.module.css'
 import CurrencyIconCustom from "../currency-icon-custom/currency-icon-custom";
 import { useSelector} from "react-redux";
 import {createSelector} from "@reduxjs/toolkit";
+import {TIngredient} from "../../services/types/data";
 
-const TotalSum = () => {
+const TotalSum:FC = () => {
 
   const sumSelector = createSelector(
-    //не уверена, что это нужно помещать в createSelector
     [state => state.constructors.bun, state => state.constructors.constructor],
-    (bun, constructor) => {
-      const totalIngredients = constructor.reduce((acc, item) => acc + item.price, 0)
+    (bun:TIngredient[], constructor) => {
+      const totalIngredients = constructor.reduce((acc:number, item:TIngredient) => acc + item.price, 0)
       const totalBuns = bun[0] ? bun[0].price * 2 : 0;
       return  totalIngredients ? totalIngredients + totalBuns : totalBuns
     }

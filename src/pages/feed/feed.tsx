@@ -1,16 +1,18 @@
-import React from "react";
+import React, {FC} from "react";
 import styles from './feed.module.css'
 import {OrdersList} from "../../components/orders-list/orders-list";
-import {useSelector, useDispatch, RootStateOrAny} from 'react-redux';
 import {nanoid} from "@reduxjs/toolkit";
 import {useWebSocket} from "../../hooks/webSoket.hook";
-export const Feed = () => {
+import {useAppSelector} from "../../hooks/store";
 
+
+export const Feed:FC = () => {
   const page = 'feed'
   useWebSocket()
 
-  const {feedsOrders, feed} = useSelector((state:RootStateOrAny) => state.webSocket);
-  const findNumbers = (status) => {
+  const {feedsOrders, feed} = useAppSelector(state => state.webSocket);
+
+  const findNumbers = (status:string) => {
     return feedsOrders.filter((item) => item.status === status);
   }
 
@@ -24,11 +26,9 @@ export const Feed = () => {
           {feedsOrders &&
             feedsOrders.map((item:any) => (
 
-               // @ts-ignore
               <OrdersList key={item._id} order={item} idIngredients={item.ingredients} page={page} />
             ))
           }
-
         </section>
 
         <section className={styles.orders_info}>

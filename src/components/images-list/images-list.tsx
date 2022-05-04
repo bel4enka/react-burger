@@ -1,7 +1,8 @@
 import styles from "../orders-list/orders-list.module.css";
+import {FC} from "react";
 
 
-export const ImageListItem = ({ingredientsImages}) => {
+export const ImageListItem:FC<{ ingredientsImages: string[] }> = ({ingredientsImages}) => {
 
   return (
     <>

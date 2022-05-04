@@ -5,8 +5,36 @@ import {
 import {useHttp} from "../../hooks/http.hook";
 import {setCookie, getCookie, deleteCookie} from '../../utils/utils'
 import {baseUrl} from "../../utils/utils";
+import {
+  IInputForgotPassword,
+  IInputLogin,
+  IInputPassword,
+  IInputUserRegister
+} from "../types/data";
+import {RejectedAction} from "@reduxjs/toolkit/dist/query/core/buildThunks";
 
-const initialState = {
+type TUser = {
+  name: string,
+  email: string,
+  token: string,
+  refreshToken: string
+}
+
+interface IAuth {
+  user: TUser,
+  loggedIn: boolean,
+  loggedInErr: boolean,
+  forgotPasswordOk: boolean,
+  forgotPassToken: null,
+  resetPasswordOk: boolean,
+  forgotPasswordErr: boolean,
+  loading: boolean,
+  error: boolean,
+  updateProfileErr: boolean,
+  updateProfileSuccess: boolean,
+}
+
+const initialState:IAuth = {
   user: {
     name: null,
     email: null,
@@ -20,14 +48,14 @@ const initialState = {
   resetPasswordOk: false,
   forgotPasswordErr: false,
   loading: false,
-  error: null,
-  updateProfileErr: null,
+  error: false,
+  updateProfileErr: false,
   updateProfileSuccess: false,
 };
 
 export const fetchForgotPassword = createAsyncThunk(
   'auth/fetchForgotPassword',
-  async (email) => {
+  async (email:IInputForgotPassword) => {
     const {request} = useHttp();
     return await request(`${baseUrl}password-reset/`,'POST', JSON.stringify({'email': email}));
   }
@@ -35,8 +63,7 @@ export const fetchForgotPassword = createAsyncThunk(
 
 export const fetchRegister = createAsyncThunk(
   'auth/fetchRegister',
-  // @ts-ignore
-  async ({name, email, password}, { rejectWithValue }) => {
+  async ({name, email, password}:IInputUserRegister, { rejectWithValue }) => {
     try {
       const {request} = useHttp();
       return await request(`${baseUrl}auth/register`, 'POST', JSON.stringify({
@@ -45,8 +72,7 @@ export const fetchRegister = createAsyncThunk(
         'password': password
       }));
     } catch (error) {
-      // @ts-ignore
-      return rejectWithValue(error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -55,55 +81,46 @@ export const fetchRegister = createAsyncThunk(
 
 export const logOut = createAsyncThunk(
   'auth/logOut',
-  // @ts-ignore
   async () => {
     const {request} = useHttp();
     const refreshToken = localStorage.getItem('refreshToken');
     return await request(`${baseUrl}auth/logout`,'POST', JSON.stringify({token: refreshToken}),
       {
-        // @ts-ignore
         'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
       }
       );
   }
 );
+
 export const fetchLogin = createAsyncThunk(
   'auth/fetchLogin',
-  // @ts-ignore
-  async (input, { rejectWithValue }) => {
-
+  async (input:IInputLogin, { rejectWithValue }) => {
     const {request} = useHttp();
     try {
       return await request(`${baseUrl}auth/login`, 'POST', JSON.stringify(input));
     } catch (err) {
-
-      // @ts-ignore
-      return rejectWithValue(err.message)
+      return rejectWithValue(err)
     }
   }
 );
 
 export const fetchUpdateProfile = createAsyncThunk(
   'auth/fetchUpdateProfile',
-  // @ts-ignore
-  async (input, { rejectWithValue }) => {
+  async (input:IInputUserRegister, { rejectWithValue }) => {
       const {request} = useHttp();
     try {
       return await request(`${baseUrl}auth/user`, 'PATCH', JSON.stringify(input),
         {
-          // @ts-ignore
           'Content-Type': 'application/json', 'Authorization': getCookie('accessToken'),
         }
       );
-      // @ts-ignore
-    } catch (err) {return rejectWithValue(err.message)
+    } catch (err) {return rejectWithValue(err)
     }
   }
 );
 
 export const fetchUpdateToken = createAsyncThunk(
   'auth/fetchUpdateToken',
-  // @ts-ignore
   async () => {
     const {request} = useHttp();
     const refreshToken = localStorage.getItem('refreshToken');
@@ -114,21 +131,18 @@ export const fetchUpdateToken = createAsyncThunk(
 
 export const fetchUpdatePassword = createAsyncThunk(
   'auth/fetchUpdatePassword',
-  // @ts-ignore
-  async (input) => {
+  async (input:IInputPassword) => {
     const {request} = useHttp();
     return await request(`${baseUrl}reset`,'POST', JSON.stringify(input));
   }
 );
 export const getUser = createAsyncThunk(
   'auth/getUser',
-  // @ts-ignore
   async () => {
     const refreshToken = localStorage.getItem('refreshToken');
     const {request} = useHttp();
     return await request(`${baseUrl}auth/user`,'GET', null ,
       {
-        // @ts-ignore
         'Content-Type': 'application/json',  'Authorization': getCookie('accessToken'),
       }
     );
@@ -239,7 +253,7 @@ export const authSlice = createSlice({
       })
       .addCase(fetchForgotPassword.rejected, state => {
         state.loading = false;
-        state.error = 'Не могу отправить заказ - ошибка';
+        // state.error = 'Не могу отправить заказ - ошибка';
         state.forgotPasswordOk = false;
       })
       .addCase(fetchRegister.rejected, (state, action) => {
@@ -250,12 +264,13 @@ export const authSlice = createSlice({
       .addCase(fetchLogin.rejected, (state, action) => {
         state.loading = false;
         state.loggedInErr = true;
-        state.error = action.payload;
+        // state.error = action.payload;
       })
       .addCase(logOut.rejected, state => {
       })
       .addCase(fetchUpdateProfile.rejected, (state,action) => {
-        state.updateProfileErr = action.payload;
+        state.updateProfileErr = true;
+          // action.payload;
       })
       .addCase(fetchUpdateToken.rejected, state => {
         console.log('fetchUpdateToken - rejected')

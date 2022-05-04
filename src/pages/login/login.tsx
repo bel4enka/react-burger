@@ -1,51 +1,34 @@
 import styles from '../registr/register.module.css'
-import React, {useEffect, useRef, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
 import {
-  useDispatch,
-  useSelector,
-  RootStateOrAny
-} from "react-redux";
-import {
-  fetchLogin,
-  fetchUpdateToken,
-  getUser
+  fetchLogin
 } from "../../services/slice/auth-sclice";
 import { Redirect, useLocation } from 'react-router-dom';
+import {IInputLogin, TLocationState} from "../../services/types/data";
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
 
-export const Login = () => {
-  const dispatch = useDispatch();
-  const {loggedIn, loggedInErr} = useSelector((state:RootStateOrAny) => state.auth);
-  const location = useLocation();
+export const Login:FC = () => {
+  const dispatch = useAppDispatch();
+  const {loggedIn, loggedInErr} = useAppSelector(state => state.auth);
+  const location = useLocation<TLocationState>();
 
-  const [input, setInput] = useState({
+  const [input, setInput] = useState<IInputLogin>({
     email: '',
     password: ''
   })
 
-  const onChange = (e) => {
+  const onChange = (e: { target: { name: any; value: any; }; }) => {
     setInput({...input, [e.target.name]: e.target.value})
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault()
-    // @ts-ignore
     dispatch(fetchLogin(input))
   }
   const refreshToken = localStorage.getItem('refreshToken');
-// useEffect(() => {
-//     if(refreshToken) {
-//       dispatch(getUser())
-//       // @ts-ignore
-//       if(!loggedIn) {
-//         dispatch(fetchUpdateToken())
-//         // @ts-ignore
-//         dispatch(getUser())
-//       }
-//     }
-//
-//   }, []);
+
   if (loggedIn) {
     return <Redirect
       to={location?.state?.from || '/' }

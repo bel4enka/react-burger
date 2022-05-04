@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const CurrencyIconCustom= (props) => {
+const CurrencyIconCustom = (props: { size: string}) => {
   return (
     <span>
       <svg width={props.size} height={props.size} viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">

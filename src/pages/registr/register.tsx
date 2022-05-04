@@ -2,30 +2,28 @@ import styles from './register.module.css'
 import React, {useState} from 'react';
 import {Input, PasswordInput, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
-import {
-  fetchRegister
-} from "../../services/slice/auth-sclice";
-import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import { fetchRegister } from "../../services/slice/auth-sclice";
 import { Redirect, useLocation } from 'react-router-dom';
+import {IInputUserRegister, TLocationState} from "../../services/types/data";
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
 
 export const Register = () => {
-  const {loggedIn, loggedInErr} = useSelector((state:RootStateOrAny) => state.auth);
-  const location = useLocation();
+  const {loggedIn, loggedInErr} = useAppSelector(state => state.auth);
+  const location = useLocation<TLocationState>();
 
-  const dispatch = useDispatch();
-  const [input, setInput] = useState({
+  const dispatch = useAppDispatch();
+  const [input, setInput] = useState<IInputUserRegister>({
     name: '',
     email: '',
     password: ''
   })
 
-  const onChange = (e) => {
+  const onChange = (e: { target: { name: string; value: string; }; }) => {
     setInput({...input, [e.target.name]: e.target.value})
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault()
-    // @ts-ignore
     dispatch(fetchRegister(input))
   }
   if (loggedIn) {

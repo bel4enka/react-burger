@@ -1,44 +1,43 @@
 import styles from './orders-list.module.css'
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {RootStateOrAny, useSelector} from "react-redux";
 import {createData, statusOrder} from "../../utils/utils";
 import { ImageListItem} from "../images-list/images-list";
-import {selectAll} from "../../services/slice/ingredients-slice";
 import { Link, useLocation } from 'react-router-dom';
-import PropTypes from "prop-types";
+import {FC} from "react";
+import {TOrder} from "../../services/types/data";
+import {useAppSelector} from "../../hooks/store";
 
-
-export const OrdersList = ({order, idIngredients, page}) => {
-  const ingredients = useSelector(selectAll);
+interface IOrdersListProps {
+  order:TOrder,
+  idIngredients: string[],
+  page: string
+}
+export const OrdersList:FC<IOrdersListProps> = ({order, idIngredients, page}) => {
+  const {ingredients} = useAppSelector(state => state.ingredients);
   const location = useLocation();
 
-  const searchIngredient = value => {
-    // @ts-ignore
-   return ingredients.filter(ingredient => ingredient._id === value);
+  const searchIngredient = (value: string) => {
+   return ingredients.filter((ingredient) => ingredient._id === value);
   }
 
-  const searchIngredientsImages = id => {
-    return id.map(item => {
+  const searchIngredientsImages = (id: string[]) => {
+    return id.map((item:  string) => {
       const listImages = searchIngredient(item);
-      // @ts-ignore
       if (listImages.length) {
-        // @ts-ignore
         return listImages[0].image;
       }
     });
   }
 
-  const searchIngredientsPrice = id => {
-    return id.map(item => {
+  const searchIngredientsPrice = (id: string[]) => {
+    return id.map((item:  string) => {
       const priceList = searchIngredient(item);
-      // @ts-ignore
       if (priceList.length) {
-        // @ts-ignore
         return priceList[0].price;
       }
     });
   }
-  const price = searchIngredientsPrice(idIngredients).reduce((acc, price) => acc + price, 0)
+  const price = searchIngredientsPrice(idIngredients).reduce((acc: number, price: number) => acc + price, 0)
   return (
     <>
       <Link className={styles.item} to={{ pathname: `/${page}/${order._id}`, state: { background: location } }}>
@@ -64,15 +63,4 @@ export const OrdersList = ({order, idIngredients, page}) => {
 
     </>
   )
-}
-OrdersList.propTypes ={
-  order: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    _id: PropTypes.string.isRequired,
-    number: PropTypes.number.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-  }),
-  idIngredients: PropTypes.array,
-  page: PropTypes.string.isRequired,
 }

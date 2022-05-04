@@ -1,57 +1,51 @@
 import styles from "./order-item.module.css"
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {RootStateOrAny, useDispatch, useSelector} from 'react-redux';
-import {selectAll} from "../../services/slice/ingredients-slice";
 import {useParams} from "react-router-dom";
 import {statusOrder} from "../../utils/utils";
 import {useEffect, useMemo} from "react";
 import {createData} from "../../utils/utils";
-import {nanoid} from "@reduxjs/toolkit";
 import {useWebSocket} from "../../hooks/webSoket.hook";
 import {
   fetchUpdateToken, getUser
 } from "../../services/slice/auth-sclice";
-
+import {useAppDispatch, useAppSelector} from "../../hooks/store";
+import {IOrderIngredient, TOrder} from "../../services/types/data";
 
 
 export const OrderItem = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const refreshToken = localStorage.getItem('refreshToken');
-  const {loggedIn} = useSelector((state:RootStateOrAny) => state.auth);
+  const {loggedIn} = useAppSelector(state => state.auth);
 
   useWebSocket()
   useEffect(() => {
     if(refreshToken) {
       dispatch(getUser())
-      // @ts-ignore
       if(!loggedIn) {
         dispatch(fetchUpdateToken())
-        // @ts-ignore
         dispatch(getUser())
       }
     }
 
   }, []);
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
 
-  const {feedsOrders} = useSelector((state:RootStateOrAny) => state.webSocket);
+  const {feedsOrders} = useAppSelector(state => state.webSocket);
 
-  const orders = (feedsOrders) =>feedsOrders?feedsOrders.find(item => item._id === id):null
+  const orders = (feedsOrders: TOrder[]) => feedsOrders?feedsOrders.find(item => item._id === id):null
   const order = orders(feedsOrders)
 
-  function useOrderIngredients(order) {
-    const ingredients = useSelector(selectAll);
+  function useOrderIngredients(order: TOrder | undefined) {
+    const {ingredients} = useAppSelector(state => state.ingredients);
     const { newIngredients, total } = useMemo(() => {
       if (order) {
-        return order.ingredients.reduce((acc, orderIngredient) => {
-          const newIngredient = acc.newIngredients.find(item => item.ingredient._id === orderIngredient);
+        return order.ingredients.reduce<{ newIngredients: IOrderIngredient[], total: any }>((acc, orderIngredient) => {
+          const newIngredient = acc.newIngredients.find(item => item.ingredient._id === orderIngredient._id);
           if (!newIngredient) {
-            // @ts-ignore
-            const ingredient = ingredients.find((item) => item._id === orderIngredient);
+            const ingredient = ingredients.find((item:any) => item._id === orderIngredient);
             if (ingredient) {
               acc.newIngredients.push({ ingredient, count: 1 });
-              // @ts-ignore
               acc.total += ingredient.price;
             }
           }
@@ -71,7 +65,6 @@ export const OrderItem = () => {
   }
 
   const newIngredient = useOrderIngredients(order)
-
   return (
 <>
         <div className={styles.wrap}>
@@ -92,6 +85,7 @@ export const OrderItem = () => {
               <h2 className={'text text_type_main-medium mb-6'}>Состав:</h2>
               <ul className={styles.ingredients_list}>
                 {newIngredient.newIngredients.map((item,i) => (
+
                   <li key={i} className={styles.ingredient_item}>
                     <img className={styles.ingredient_img} alt={'ингредиент'}
                          src={item.ingredient.image}/>
@@ -102,12 +96,12 @@ export const OrderItem = () => {
                       <CurrencyIcon type="primary"/>
                               </span>
                   </li>)
+
                 )}
               </ul>
             </section>
             <section className={styles.footer}>
               <time
-                // @ts-ignore
                 className={`${styles.footer_date} text text_color_inactive text_type_main-default`}>{createData(order.createdAt)}
               </time>
               <div className={styles.footer_price}>
