@@ -15,7 +15,7 @@ const Modal = ( { ...props }:TModalProps ) => {
   const node = document.getElementById('react-modals')!
 
   useEffect(() => {
-    const handleEsc = (event: { key: string; }) => {
+    const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose(false)
       }
